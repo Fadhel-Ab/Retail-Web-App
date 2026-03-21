@@ -4,7 +4,6 @@ import "../assets/styles/globals.css";
 import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from "@/lib/constants";
 const InterSans = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${InterSans.variable} antialiased `} //or InterSans.className if you don't want to use CSS variables
+        className={`${InterSans.className} antialiased `} //or InterSans.className if you don't want to use CSS variables
       >
         {children}
       </body>
