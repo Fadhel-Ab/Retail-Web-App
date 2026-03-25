@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 
 const ModeToggle = () => {
   const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const ModeToggle = () => {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger
         render={
           <Button variant="ghost">
@@ -43,27 +44,37 @@ const ModeToggle = () => {
       ></DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          <DropdownMenuLabel className='text-base'>Appearance</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-base">
+            Appearance
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuCheckboxItem
             checked={theme === "system"}
-            onClick={() => setTheme("system")}
+            onClick={() => {
+              setTheme("system");
+              setOpen(false);
+            }}
           >
             System
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
             checked={theme === "dark"}
-            onClick={() => setTheme("dark")}
+            onClick={() => {
+              setTheme("dark");
+              setOpen(false);
+            }}
           >
             Dark
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
             checked={theme === "light"}
-            onClick={() => setTheme("light")}
+            onClick={() => {
+              setTheme("light");
+              setOpen(false);
+            }}
           >
             Light
           </DropdownMenuCheckboxItem>
-          
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
