@@ -1,3 +1,15 @@
+
+import "../assets/styles/globals.css";
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return <>{children}</>;
+}
+
+/* Before adding the intlayer 
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../assets/styles/globals.css";
@@ -37,3 +49,4 @@ export default function RootLayout({
     </html>
   );
 }
+*/

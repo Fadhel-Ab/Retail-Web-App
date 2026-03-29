@@ -2,10 +2,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { APP_NAME } from "@/lib/constants";
+
 import Menu from "./menu";
 
-export default function Header() {
+import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
+
+export default  function Header({locale}:{locale:string}) {
+  const {header} = getPageContent("page",locale);
   return (
     <header className="w-full border-b">
       <div className="wrapper flex-between">
@@ -13,17 +16,17 @@ export default function Header() {
           <Link href="/" className="flex-start">
             <Image
               src="/images/logo.svg"
-              alt={`${APP_NAME} Logo`}
+              alt={`${header.title} Logo`}
               width={48}
               height={48}
               priority={true}
             />
-            <span className="hidden lg:block font-bold text-2xl ml-3">
-              {APP_NAME}
+            <span className="hidden lg:block font-bold text-2xl ms-3">
+              {header.title}
             </span>
           </Link>
         </div>
-        <Menu/>
+        <Menu locale={locale} />
       </div>
     </header>
   );

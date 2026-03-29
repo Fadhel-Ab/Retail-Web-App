@@ -1,6 +1,6 @@
 import { APP_NAME } from "@/lib/constants";
 
-const Footer = () => {
+const Footer = ({locale}:{locale:string}) => {
   const currentYear = new Date().getFullYear();
   return (
     <footer className="border-t">
