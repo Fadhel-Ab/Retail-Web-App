@@ -1,12 +1,7 @@
 import Footer from "@/components/footer";
 import Header from "@/components/shared/header";
-import { get } from "http";
 import { IntlayerClientProvider } from "next-intlayer";
-import {
-  IntlayerServerProvider,
-  locale,
-  useIntlayer,
-} from "next-intlayer/server";
+import { IntlayerServerProvider } from "next-intlayer/server";
 import { ReactNode } from "react";
 
 interface RootLayoutProps {

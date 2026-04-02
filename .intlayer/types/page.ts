@@ -14,7 +14,9 @@ export default {
         "getStarted": {
           "main": "Get started by editing",
           "pageLink": "src/app/page.tsx"
-        }
+        },
+        "card": "Out Of Stock",
+        "pageLink": "src/app/page.tsx"
       },
       "ar": {
         "header": {
@@ -26,7 +28,9 @@ export default {
         "getStarted": {
           "main": "تجرية",
           "pageLink": "src/app/page.tsx"
-        }
+        },
+        "card": "غير متوفر حالياً",
+        "pageLink": "src/app/page.tsx"
       }
     }
   },

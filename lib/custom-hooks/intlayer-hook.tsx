@@ -1,5 +1,5 @@
 // lib/usePageContent.ts
-import { locale, useIntlayer } from "next-intlayer/server";
+import { useIntlayer } from "next-intlayer/server";
 
 
 export  function getPageContent(key: string, locale?: string)  {

@@ -3,9 +3,8 @@ import ModeToggle from "./toggle-mode";
 import { EllipsisVertical, ShoppingCart, UserIcon } from "lucide-react";
 import Link from "next/link";
 
-import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
 import { LocaleSwitcher } from "./language-select";
-import { getHTMLTextDir, LocalesValues } from "intlayer";
+import { getHTMLTextDir } from "intlayer";
 import { useIntlayer } from "next-intlayer/server";
 import {
   Sheet,
@@ -16,11 +15,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-
-
-const Menu =  ({locale}:{locale:string}) => {
-  const {header} = useIntlayer("page",locale);
-  const dir =  getHTMLTextDir(locale);
+const Menu = ({ locale }: { locale: string }) => {
+  const { header } = useIntlayer("page", locale);
+  const dir = getHTMLTextDir(locale);
   console.log(`dir: ${dir}`);
   return (
     <div className="flex justify-end gap-3">
@@ -43,7 +40,7 @@ const Menu =  ({locale}:{locale:string}) => {
           <SheetTrigger className="align-middle">
             <EllipsisVertical />
           </SheetTrigger>
-          <SheetContent side={dir === "rtl" ? "left" : "right"} >
+          <SheetContent side={dir === "rtl" ? "left" : "right"}>
             <SheetHeader>
               <SheetTitle>{header.menu}</SheetTitle>
             </SheetHeader>

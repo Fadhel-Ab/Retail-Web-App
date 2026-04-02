@@ -1,5 +1,4 @@
 import { t, type Dictionary } from "intlayer";
-import { title } from "process";
 
 const pageContent = {
   key: "page",
@@ -29,6 +28,12 @@ const pageContent = {
       }),
       pageLink: "src/app/page.tsx",
     },
+    card:t({
+        en: "Out Of Stock",
+        ar: "غير متوفر حالياً",
+      }),
+      pageLink: "src/app/page.tsx",
+
   },
 } satisfies Dictionary;
 

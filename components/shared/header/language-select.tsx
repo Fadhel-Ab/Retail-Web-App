@@ -13,17 +13,22 @@ import { getLocaleName, getLocalizedUrl, Locales } from "intlayer";
 import { useLocale } from "next-intlayer";
 import { useState } from "react";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
 export const LocaleSwitcher = () => {
   const { locale, pathWithoutLocale, availableLocales, setLocale } =
     useLocale();
   const [open, setOpen] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost">▼ {getLocaleName(locale, locale)}</Button>
+          <Button variant="ghost" onClick={() => setClicked(!clicked)}>
+            {clicked ? <ChevronDown className="ms-2 rotate-180" /> : <ChevronDown className="ms-2" /> }
+            {getLocaleName(locale, locale)}
+          </Button>
         }
       ></DropdownMenuTrigger>
       <DropdownMenuContent>
