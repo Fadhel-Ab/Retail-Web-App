@@ -1,7 +1,7 @@
-const _qoUfKTP6uQuRrmb3Xdt5 = require('../unmerged_dictionary/page.json');
+const _Huw30bbX456DBut8adpg = require('../unmerged_dictionary/page.json');
 
 const dictionaries = {
-  "page": _qoUfKTP6uQuRrmb3Xdt5
+  "page": _Huw30bbX456DBut8adpg
 };
 const getUnmergedDictionaries = () => dictionaries;
 

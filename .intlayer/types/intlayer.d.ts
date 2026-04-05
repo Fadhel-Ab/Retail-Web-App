@@ -1,9 +1,9 @@
 import "intlayer";
-import _7gbtCCW7eXjtMyMDSlnt from './page.ts';
+import _HipdULV3pV4yHUwmZ49T from './page.ts';
 
 declare module 'intlayer' {
   interface __DictionaryRegistry {
-    "page": typeof _7gbtCCW7eXjtMyMDSlnt;
+    "page": typeof _HipdULV3pV4yHUwmZ49T;
   }
 
   interface __DeclaredLocalesRegistry {

@@ -6,13 +6,15 @@ import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
 
 const ProductCard = async ({ product, locale }: { product: any; locale:string }) => {
     const available = await getPageContent('page',locale);
+    const translatedName= locale === 'en' ? product.name : product.nameAr;
+    const translatedBrand= locale === 'en' ? product.brand : product.brandAr;
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
         <Link href={`/products/${product.slug}`}>
           <Image
             src={product.images[0]}
-            alt={product.name}
+            alt={translatedName}
             height={300}
             width={300}
             priority={true}
@@ -20,9 +22,9 @@ const ProductCard = async ({ product, locale }: { product: any; locale:string })
         </Link>
       </CardHeader>
       <CardContent className="p-4 grid gap-4">
-        <div className="text-xs">{product.brand}</div>
+        <div className="text-xs">{translatedBrand}</div>
         <Link href={`/products/${product.slug}`}>
-          <h2 className="text-sm font-medium">{product.name}</h2>
+          <h2 className="text-sm font-medium">{translatedName}</h2>
         </Link>
         <div className="flex-between gap-4">
           <p>{product.rating} stars</p>

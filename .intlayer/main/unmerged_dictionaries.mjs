@@ -1,7 +1,7 @@
-import _qoUfKTP6uQuRrmb3Xdt5 from '../unmerged_dictionary/page.json' with { type: 'json' };
+import _Huw30bbX456DBut8adpg from '../unmerged_dictionary/page.json' with { type: 'json' };
 
 const dictionaries = {
-  "page": _qoUfKTP6uQuRrmb3Xdt5
+  "page": _Huw30bbX456DBut8adpg
 };
 const getUnmergedDictionaries = () => dictionaries;
 

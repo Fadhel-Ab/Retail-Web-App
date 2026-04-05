@@ -1,7 +1,7 @@
-import _fqNLdmFCDhOvhiCfAbUv from '../dictionary/page.json' with { type: 'json' };
+import _CxWmGzEj0P7YZZdQIJ9g from '../dictionary/page.json' with { type: 'json' };
 
 const dictionaries = {
-  "page": _fqNLdmFCDhOvhiCfAbUv
+  "page": _CxWmGzEj0P7YZZdQIJ9g
 };
 const getDictionaries = () => dictionaries;
 

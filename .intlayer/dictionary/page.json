@@ -24,11 +24,16 @@
           "cart": "العربة",
           "menu": "القائمة"
         },
-        "getStarted": { "main": "تجرية", "pageLink": "src/app/page.tsx" },
+        "getStarted": {
+          "main": "تجرية",
+          "pageLink": "src/app/page.tsx"
+        },
         "card": "غير متوفر حالياً",
         "pageLink": "src/app/page.tsx"
       }
     }
   },
-  "localIds": ["page::local::app\\[locale]\\(root)\\page.content.ts"]
+  "localIds": [
+    "page::local::app\\[locale]\\(root)\\page.content.ts"
+  ]
 }

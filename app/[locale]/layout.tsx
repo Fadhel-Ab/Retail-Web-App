@@ -47,14 +47,3 @@ const LocaleLayout: NextLayoutIntlayer = async ({ children, params }) => {
 
 export default LocaleLayout;
 
-/*
- <ThemeProvider
-        attribute='class'
-        defaultTheme="light"
-        enableSystem
-        disableTransitionOnChange
-        >
-
-        </ThemeProvider>
-
-*/

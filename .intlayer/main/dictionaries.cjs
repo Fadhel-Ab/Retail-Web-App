@@ -1,7 +1,7 @@
-const _fqNLdmFCDhOvhiCfAbUv = require('../dictionary/page.json');
+const _CxWmGzEj0P7YZZdQIJ9g = require('../dictionary/page.json');
 
 const dictionaries = {
-  "page": _fqNLdmFCDhOvhiCfAbUv
+  "page": _CxWmGzEj0P7YZZdQIJ9g
 };
 const getDictionaries = () => dictionaries;
 

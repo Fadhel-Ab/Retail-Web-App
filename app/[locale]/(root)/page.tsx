@@ -1,20 +1,19 @@
 import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
-import sampleData from "@/db/sample-data";
+
 import ProductList from "@/components/shared/products/product-list";
-import ProductCard from "@/components/shared/products/product-card";
+import { getLatestProducts } from "@/lib/actions/products.actions";
+
 const Homepage = async ({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) => {
   const { locale } = await params;
-  //const { header } = await getPageContent("page", locale);
- // console.log(header.menu);
+  //const { header } = await getPageContent("page", locale); if needed 
+
   console.log(` language: ${locale}`);
-  console.log(sampleData.products_ar);
-  const data =
-    locale === "en" ? sampleData.products_en : sampleData.products_ar;
-  console.log(data);
+  console.log(await getLatestProducts());
+    const data = await getLatestProducts();
 
   return (
     <>
