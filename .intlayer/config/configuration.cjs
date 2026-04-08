@@ -7,10 +7,16 @@ const internationalization = {
 };
 const routing = {
   "mode": "prefix-all",
-  "storage": [
-    "cookie",
-    "header"
-  ],
+  "storage": {
+    "cookies": [],
+    "localStorage": [
+      {
+        "name": "INTLAYER_LOCALE"
+      }
+    ],
+    "sessionStorage": [],
+    "headers": []
+  },
   "basePath": ""
 };
 const editor = {
@@ -30,7 +36,7 @@ const log = {
 };
 const metadata = {
   "name": "Intlayer",
-  "version": "8.5.1",
+  "version": "8.6.1",
   "doc": "https://intlayer.org/docs"
 };
 const configuration = { internationalization, routing, editor, log, metadata };

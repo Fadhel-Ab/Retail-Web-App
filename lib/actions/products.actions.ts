@@ -15,5 +15,5 @@ export const getLatestProducts = async () => {
       createdAt: "desc",
     },
   });
-  return toPlainObject(products);
+  return toPlainObject(products) ;
 };

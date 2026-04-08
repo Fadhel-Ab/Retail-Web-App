@@ -3,8 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import ProductPrice from "./product-price";
 import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
+import { Product } from "@/types";
 
-const ProductCard = async ({ product, locale }: { product: any; locale:string }) => {
+const ProductCard = async ({ product, locale }: { product: Product; locale:string }) => {
     const available = await getPageContent('page',locale);
     const translatedName= locale === 'en' ? product.name : product.nameAr;
     const translatedBrand= locale === 'en' ? product.brand : product.brandAr;
@@ -27,7 +28,7 @@ const ProductCard = async ({ product, locale }: { product: any; locale:string })
           <h2 className="text-sm font-medium">{translatedName}</h2>
         </Link>
         <div className="flex-between gap-4">
-          <p>{product.rating} stars</p>
+          <p>{Number(product.rating)} stars</p>
           {product.stock > 0 ? (
             <ProductPrice value={Number(product.price)}/>
           ) : (
