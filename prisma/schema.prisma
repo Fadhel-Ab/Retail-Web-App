@@ -6,6 +6,7 @@
 generator client {
   provider = "prisma-client"
   output   = "../lib/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -32,3 +33,4 @@ model Product {
   banner        String?
   createdAt     DateTime @default(now()) @db.Timestamp(6)
 }
+

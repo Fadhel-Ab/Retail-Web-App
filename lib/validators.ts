@@ -5,11 +5,12 @@ import { Prisma } from "./generated/prisma/browser";
 // zod schema for inserting product
 const arabicRegex = /^[\u0600-\u06FF\s]+$/;
 const priceRegex = /^\d+(.\d{2})?$/;
-    const currency = z
-    .string()
-    .refine((val) => priceRegex.test(formatNumberWithDecimal((val))), {
-        message: "Price must have exactly 2 decimal places ",
-    }).transform((val)=> new Prisma.Decimal(val));
+const currency = z
+  .string()
+  .refine((val) => priceRegex.test(formatNumberWithDecimal(val)), {
+    message: "Price must have exactly 2 decimal places ",
+  })
+  .transform((val) => new Prisma.Decimal(val));
 
 export const insertProductSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -46,4 +47,29 @@ export const insertProductSchema = z.object({
   isFeatured: z.boolean(),
   banner: z.string().nullable(),
   price: currency,
+});
+
+export const ProductResponseSchema = z.object({
+  id: z.string(),
+  nameAr: z.string(),
+  name: z.string(),
+  slug: z.string(),
+  category: z.string(),
+  categoryAr: z.string(),
+  brand: z.string(),
+  brandAr: z.string(),
+  description: z.string(),
+  descriptionAr: z.string(),
+  stock: z.number(),
+  images: z.array(z.string()),
+  isFeatured: z.boolean(),
+  banner: z.string().nullable(),
+  price: z
+  .preprocess((val) => String(val), z.string()), 
+  rating: z
+  .preprocess((val) => String(val), z.string()), 
+  numReviews: z.number(),
+  createdAt: z
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val)),
 });

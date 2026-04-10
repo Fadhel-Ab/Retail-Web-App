@@ -5,14 +5,20 @@ import ProductPrice from "./product-price";
 import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
 import { Product } from "@/types";
 
-const ProductCard = async ({ product, locale }: { product: Product; locale:string }) => {
-    const available = await getPageContent('page',locale);
-    const translatedName= locale === 'en' ? product.name : product.nameAr;
-    const translatedBrand= locale === 'en' ? product.brand : product.brandAr;
+const ProductCard = async ({
+  product,
+  locale,
+}: {
+  product: Product;
+  locale: string;
+}) => {
+  const available = await getPageContent("page", locale);
+  const translatedName = locale === "en" ? product.name : product.nameAr;
+  const translatedBrand = locale === "en" ? product.brand : product.brandAr;
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <Link href={`/products/${product.slug}`}>
+        <Link href={`/product/${product.slug}`}>
           <Image
             src={product.images[0]}
             alt={translatedName}
@@ -24,13 +30,13 @@ const ProductCard = async ({ product, locale }: { product: Product; locale:strin
       </CardHeader>
       <CardContent className="p-4 grid gap-4">
         <div className="text-xs">{translatedBrand}</div>
-        <Link href={`/products/${product.slug}`}>
+        <Link href={`/product/${product.slug}`}>
           <h2 className="text-sm font-medium">{translatedName}</h2>
         </Link>
         <div className="flex-between gap-4">
-          <p>{Number(product.rating)} stars</p>
+          <p>{product.rating} stars</p>
           {product.stock > 0 ? (
-            <ProductPrice value={Number(product.price)}/>
+            <ProductPrice value={Number(product.price)} />
           ) : (
             <div className="p text-destructive">{available.card}</div>
           )}
