@@ -1,3 +1,5 @@
+Deployed on Vercel ([Deployment Link](https://retail-web-app-swart.vercel.app/en))
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
