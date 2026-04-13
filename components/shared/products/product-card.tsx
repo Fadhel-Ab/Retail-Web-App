@@ -18,13 +18,14 @@ const ProductCard = async ({
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <Link href={`/product/${product.slug}`}>
+        <Link href={`${locale}/product/${product.slug}`}>
           <Image
             src={product.images[0]}
             alt={translatedName}
             height={300}
             width={300}
             priority={true}
+            className="w-75 h-75 object-cover"
           />
         </Link>
       </CardHeader>

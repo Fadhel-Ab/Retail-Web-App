@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { notFound } from "next/navigation";
 import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
 import { Badge } from "@/components/ui/badge";
+import ProductImages from "@/components/shared/products/product-images";
+
 
 const ProductDetailsPage = async ({
   params,
@@ -16,7 +18,7 @@ const ProductDetailsPage = async ({
   console.log(locale);
 
   if (!product) notFound();
-  const available = await getPageContent("page", locale);
+  const {productPage} = await getPageContent("page", locale);
   const translatedName = locale === "en" ? product.name : product.nameAr;
   const translatedBrand = locale === "en" ? product.brand : product.brandAr;
   const translatedCategory =
@@ -28,7 +30,7 @@ const ProductDetailsPage = async ({
     <section>
       <div className="grid grid-cols-1 md:grid-cols-5">
         {/* images col */}
-        <div className="col-span-2">{/* Image comp */}</div>
+        <div className="col-span-2"><ProductImages images={product.images} /></div>
         {/* details col */}
         <div className="col-span-2 p-5">
           <div className="flex flex-col gap-6">
@@ -53,22 +55,26 @@ const ProductDetailsPage = async ({
           <Card>
             <CardContent>
               <div className="mb-2 flex justify-between">
-                <div>Price</div>
+                <div>{productPage.price}</div>
                 <div>
                   <ProductPrice value={Number(product.price)} />
                 </div>
               </div>
               <div className="mb-2 flex justify-between">
-                <div>Status</div>
+                <div>{productPage.status}</div>
                 {product.stock > 0 ? (
-                  <Badge  className="bg-gray-300" variant={"outline"}>In Stock</Badge>
+                  <Badge className="bg-gray-300" variant={"outline"}>
+                    {productPage.inStock}
+                  </Badge>
                 ) : (
-                  <Badge variant={"destructive"}>Out Of Stock</Badge>
+                  <Badge variant={"destructive"}>
+                    {productPage.outOfStock}
+                  </Badge>
                 )}
               </div>
               {product.stock > 0 && (
                 <div className="flex-center">
-                  <Button className={"w-full"}>Add to Cart</Button>
+                  <Button className={"w-full"}>{productPage.addToCart}</Button>
                 </div>
               )}
             </CardContent>

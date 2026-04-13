@@ -26,14 +26,34 @@ const pageContent = {
         en: "Get started by editing",
         ar: "تجرية",
       }),
-      pageLink: "src/app/page.tsx",
     },
-    card:t({
+    card: t({
+      en: "Out Of Stock",
+      ar: "غير متوفر حالياً",
+    }),
+
+    productPage: {
+      price: t({
+        en: "Price",
+        ar: "السعر",
+      }),
+      status: t({
+        en: "Status",
+        ar: "الحالة",
+      }),
+      addToCart: t({
+        en: "Add to Cart",
+        ar: "إضافة إلى العربة",
+      }),
+      inStock: t({
+        en: "In Stock",
+        ar: "متوفر",
+      }),
+      outOfStock: t({
         en: "Out Of Stock",
         ar: "غير متوفر حالياً",
       }),
-      pageLink: "src/app/page.tsx",
-
+    },
   },
 } satisfies Dictionary;
 

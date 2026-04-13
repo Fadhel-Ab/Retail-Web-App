@@ -12,11 +12,16 @@ export default {
           "menu": "Menu"
         },
         "getStarted": {
-          "main": "Get started by editing",
-          "pageLink": "src/app/page.tsx"
+          "main": "Get started by editing"
         },
         "card": "Out Of Stock",
-        "pageLink": "src/app/page.tsx"
+        "productPage": {
+          "price": "Price",
+          "status": "Status",
+          "addToCart": "Add to Cart",
+          "inStock": "In Stock",
+          "outOfStock": "Out Of Stock"
+        }
       },
       "ar": {
         "header": {
@@ -26,11 +31,16 @@ export default {
           "menu": "القائمة"
         },
         "getStarted": {
-          "main": "تجرية",
-          "pageLink": "src/app/page.tsx"
+          "main": "تجرية"
         },
         "card": "غير متوفر حالياً",
-        "pageLink": "src/app/page.tsx"
+        "productPage": {
+          "price": "السعر",
+          "status": "الحالة",
+          "addToCart": "إضافة إلى العربة",
+          "inStock": "متوفر",
+          "outOfStock": "غير متوفر حالياً"
+        }
       }
     }
   },

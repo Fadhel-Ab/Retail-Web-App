@@ -39,8 +39,7 @@
             "en": "Get started by editing",
             "ar": "تجرية"
           }
-        },
-        "pageLink": "src/app/page.tsx"
+        }
       },
       "card": {
         "nodeType": "translation",
@@ -49,7 +48,43 @@
           "ar": "غير متوفر حالياً"
         }
       },
-      "pageLink": "src/app/page.tsx"
+      "productPage": {
+        "price": {
+          "nodeType": "translation",
+          "translation": {
+            "en": "Price",
+            "ar": "السعر"
+          }
+        },
+        "status": {
+          "nodeType": "translation",
+          "translation": {
+            "en": "Status",
+            "ar": "الحالة"
+          }
+        },
+        "addToCart": {
+          "nodeType": "translation",
+          "translation": {
+            "en": "Add to Cart",
+            "ar": "إضافة إلى العربة"
+          }
+        },
+        "inStock": {
+          "nodeType": "translation",
+          "translation": {
+            "en": "In Stock",
+            "ar": "متوفر"
+          }
+        },
+        "outOfStock": {
+          "nodeType": "translation",
+          "translation": {
+            "en": "Out Of Stock",
+            "ar": "غير متوفر حالياً"
+          }
+        }
+      }
     },
     "location": "local",
     "localId": "page::local::app\\[locale]\\(root)\\page.content.ts",

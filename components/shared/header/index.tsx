@@ -13,7 +13,7 @@ export default  function Header({locale}:{locale:string}) {
     <header className="w-full border-b">
       <div className="wrapper flex-between">
         <div className="flex-start">
-          <Link href="/" className="flex-start">
+          <Link href={`/${locale}`} className="flex-start">
             <Image
               src="/images/logo.svg"
               alt={`${header.title} Logo`}

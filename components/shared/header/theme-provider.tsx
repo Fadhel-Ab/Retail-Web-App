@@ -6,7 +6,15 @@ const NextThemesProvider = dynamic(
   () => import("next-themes").then((mod) => mod.ThemeProvider),
   { ssr: false },
 );
+const scriptProps =
+  typeof window === "undefined"
+    ? undefined
+    : ({ type: "application/json" } as const);
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <NextThemesProvider scriptProps={scriptProps} {...props}>
+      {children}
+    </NextThemesProvider>
+  );
 }
