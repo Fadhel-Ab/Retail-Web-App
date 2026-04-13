@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 import { withIntlayer } from "next-intlayer/server";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+ 
+  // Tells Next.js to skip bundling these packages and use Node's native resolution
+  serverExternalPackages: ["@prisma/client", "pg"],
 };
 
 export default withIntlayer(nextConfig);
