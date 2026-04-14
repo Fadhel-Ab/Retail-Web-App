@@ -54,6 +54,13 @@ const pageContent = {
         ar: "غير متوفر حالياً",
       }),
     },
+    metadata: {
+      title: t({
+        en: "Home | Fadhel Store",
+        ar: "الرئيسية | متجر فاضل",
+      }),
+      description: t({ en: "Explore our app", ar: "استكشف تطبيقنا" }),
+    },
   },
 } satisfies Dictionary;
 

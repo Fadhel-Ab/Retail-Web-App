@@ -26,12 +26,15 @@ const Menu = ({ locale }: { locale: string }) => {
         <ModeToggle />
         <Button
           nativeButton={false}
-          render={<Link href="/cart" />}
+          render={<Link href={`${locale}/cart`} />}
           variant="ghost"
         >
           <ShoppingCart /> {header.cart}
         </Button>
-        <Button nativeButton={false} render={<Link href="/sign-in" />}>
+        <Button
+          nativeButton={false}
+          render={<Link href={`${locale}/sign-in`} />}
+        >
           <UserIcon /> {header.signIn}
         </Button>
       </nav>
@@ -49,12 +52,12 @@ const Menu = ({ locale }: { locale: string }) => {
               <LocaleSwitcher />
               <Button
                 nativeButton={false}
-                render={<Link href={"/cart"} />}
+                render={<Link href={`${locale}/cart`} />}
                 variant="ghost"
               >
                 <ShoppingCart /> {header.cart}
               </Button>
-              <Button nativeButton={false} render={<Link href="/sign-in" />}>
+              <Button nativeButton={false} render={<Link href={`${locale}/sign-in`} />}>
                 <UserIcon /> {header.signIn}
               </Button>
             </div>
