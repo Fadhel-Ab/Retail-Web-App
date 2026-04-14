@@ -9,8 +9,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"]!,
+    url: process.env["DIRECT_URL"]!,
   },
 });
 
-// process.env["DATABASE_URL"] ||  "DATABASE_URL is not defined in environment variables"
+// we use direct url for none pooled stuff/ seeding migration and pooled url for the app itself, this is because of the connection limit of neon and the fact that prisma adapter neon does not support pooling yet, so we use the direct url for seeding and migrations and the pooled url for the app itself.
