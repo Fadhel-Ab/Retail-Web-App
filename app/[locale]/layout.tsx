@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "../../assets/styles/globals.css";
-import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from "@/lib/constants";
 import { IntlayerServerProvider } from "next-intlayer/server";
 import { getHTMLTextDir } from "intlayer";
 import {
@@ -35,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // Use getIntlayer to fetch your translated content declaration
   // Ensure you have a content declaration file for 'app-metadata'
-  const {metadata} = getPageContent("page", locale);
+  const { metadata } = getPageContent("page", locale);
   console.log(metadata);
   return {
     title: {
@@ -44,7 +43,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     description: metadata.description.value,
     metadataBase: new URL(
-      process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000",
+      process.env.NEXT_PUBLIC_SERVER_URL ||
+        "https://retail-web-app-swart.vercel.app/",
     ),
     // Best Practice: Hreflang tags for SEO
     alternates: {
