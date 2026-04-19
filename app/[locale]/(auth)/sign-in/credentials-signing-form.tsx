@@ -30,7 +30,7 @@ const CredentialSignInForm = ({ locale }: { locale: string }) => {
           <Input
             id="password"
             name="password"
-            type="text"
+            type="password"
             required
             autoComplete="password"
             defaultValue={defaultSignInValues.password}
