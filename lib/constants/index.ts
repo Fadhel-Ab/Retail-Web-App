@@ -7,3 +7,7 @@ export const SERVER_URL =
   "https://retail-web-app-swart.vercel.app/";
 export const LATEST_PRODUCTS_LIMIT =
   Number(process.env.NEXT_PUBLIC_LATEST_PRODUCTS_LIMIT) || 4;
+export const defaultSignInValues= {
+email:'',
+password:'',
+};

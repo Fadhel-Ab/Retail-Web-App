@@ -4,6 +4,23 @@ import ProductList from "@/components/shared/products/product-list";
 import { getLatestProducts } from "@/lib/actions/products.actions";
 import { formatNumberWithDecimal } from "@/lib/utils";
 
+import { Metadata } from "next";
+
+
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+
+  // Fetch localized content for the sign-in page
+  return {
+    title: locale === "en" ? "Home" : "الرئيسية", // This will be plugged into your layout's %s template
+  };
+}
+
+
 const Homepage = async ({
   params,
 }: {

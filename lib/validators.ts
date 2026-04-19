@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { email, z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "./generated/prisma/browser";
 
@@ -64,12 +64,15 @@ export const ProductResponseSchema = z.object({
   images: z.array(z.string()),
   isFeatured: z.boolean(),
   banner: z.string().nullable(),
-  price: z
-  .preprocess((val) => String(val), z.string()), 
-  rating: z
-  .preprocess((val) => String(val), z.string()), 
+  price: z.preprocess((val) => String(val), z.string()),
+  rating: z.preprocess((val) => String(val), z.string()),
   numReviews: z.number(),
   createdAt: z
     .union([z.date(), z.string()])
     .transform((val) => (val instanceof Date ? val.toISOString() : val)),
+});
+
+export const signInFormSchema = z.object({
+  email: z.email({ message: "Invalid email address" }),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });

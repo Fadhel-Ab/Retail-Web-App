@@ -56,8 +56,8 @@ const pageContent = {
     },
     metadata: {
       title: t({
-        en: "Home | Fadhel Store",
-        ar: "الرئيسية | متجر فاضل",
+        en: "Fadhel Store",
+        ar: "متجر فاضل",
       }),
       description: t({ en: "Explore our app", ar: "استكشف تطبيقنا" }),
     },

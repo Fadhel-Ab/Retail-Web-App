@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import ProductImages from "@/components/shared/products/product-images";
 
 
+
+
 const ProductDetailsPage = async ({
   params,
 }: {

@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: {
       default: metadata.title.value,
-      template: `%s | ${metadata.title}`,
+      template: `%s | ${metadata.title.value}`,
     },
     description: metadata.description.value,
     metadataBase: new URL(
