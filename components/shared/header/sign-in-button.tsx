@@ -5,14 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Children } from "react";
 
-const SignInButton = ({ children }: { children: React.ReactNode }) => {
+const SignInButton = ({ children, locale }: { children: React.ReactNode; locale: string }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const pathname = usePathname();
     return (<Button
                 nativeButton={false}
                 render={
                   <Link
-                    href={`/sign-in?callbackUrl=${encodeURIComponent(pathname)}`}
+                    href={`/${locale}/sign-in?callbackUrl=${encodeURIComponent(pathname)}`}
                     className="btn-signin"
                   />
                 }

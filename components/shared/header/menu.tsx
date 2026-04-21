@@ -32,7 +32,7 @@ const Menu = ({ locale }: { locale: string }) => {
         >
           <ShoppingCart /> {header.cart}
         </Button>
-        <SignInButton>
+        <SignInButton locale={locale}>
           <UserIcon /> {header.signIn}
         </SignInButton>
       </nav>
@@ -55,7 +55,7 @@ const Menu = ({ locale }: { locale: string }) => {
               >
                 <ShoppingCart /> {header.cart}
               </Button>
-              <SignInButton>
+              <SignInButton locale={locale}>
                 <UserIcon /> {header.signIn}
               </SignInButton>
             </div>
