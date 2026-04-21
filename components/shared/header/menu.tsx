@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import ModeToggle from "./toggle-mode";
 import { EllipsisVertical, ShoppingCart, UserIcon } from "lucide-react";
 import Link from "next/link";
-
+import SignInButton from "@/components/shared/header/sign-in-button";
 import { LocaleSwitcher } from "./language-select";
 import { getHTMLTextDir } from "intlayer";
 import { useIntlayer } from "next-intlayer/server";
@@ -17,6 +17,7 @@ import {
 
 const Menu = ({ locale }: { locale: string }) => {
   const { header } = useIntlayer("page", locale);
+  
   const dir = getHTMLTextDir(locale);
   console.log(`dir: ${dir}`);
   return (
@@ -31,12 +32,9 @@ const Menu = ({ locale }: { locale: string }) => {
         >
           <ShoppingCart /> {header.cart}
         </Button>
-        <Button
-          nativeButton={false}
-          render={<Link href={`${locale}/sign-in`} />}
-        >
+        <SignInButton>
           <UserIcon /> {header.signIn}
-        </Button>
+        </SignInButton>
       </nav>
       <nav className="md:hidden">
         <Sheet>
@@ -57,9 +55,9 @@ const Menu = ({ locale }: { locale: string }) => {
               >
                 <ShoppingCart /> {header.cart}
               </Button>
-              <Button nativeButton={false} render={<Link href={`${locale}/sign-in`} />}>
+              <SignInButton>
                 <UserIcon /> {header.signIn}
-              </Button>
+              </SignInButton>
             </div>
           </SheetContent>
         </Sheet>
