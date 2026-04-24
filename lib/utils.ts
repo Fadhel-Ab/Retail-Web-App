@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { PrismaClient } from "./generated/prisma/internal/class";
-import prisma from "./prisma";
+import { PrismaClient } from "@prisma/client";
+
 import { Prisma } from "@prisma/client";
 
 // override tailwind default styles with custom ones
