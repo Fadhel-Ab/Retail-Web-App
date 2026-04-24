@@ -14,6 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import UserButton from "./user-button";
 
 const Menu = ({ locale }: { locale: string }) => {
   const { header } = useIntlayer("page", locale);
@@ -32,9 +33,7 @@ const Menu = ({ locale }: { locale: string }) => {
         >
           <ShoppingCart /> {header.cart}
         </Button>
-        <SignInButton locale={locale}>
-          <UserIcon /> {header.signIn}
-        </SignInButton>
+        <UserButton locale={locale} />
       </nav>
       <nav className="md:hidden">
         <Sheet>
@@ -55,9 +54,7 @@ const Menu = ({ locale }: { locale: string }) => {
               >
                 <ShoppingCart /> {header.cart}
               </Button>
-              <SignInButton locale={locale}>
-                <UserIcon /> {header.signIn}
-              </SignInButton>
+              <UserButton locale={locale} />
             </div>
           </SheetContent>
         </Sheet>

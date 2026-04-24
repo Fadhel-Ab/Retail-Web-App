@@ -71,8 +71,20 @@ export const ProductResponseSchema = z.object({
     .union([z.date(), z.string()])
     .transform((val) => (val instanceof Date ? val.toISOString() : val)),
 });
-
+// zod schema for sign-in form
 export const signInFormSchema = z.object({
   email: z.email({ message: "Invalid email address" }),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
+
+// zod schema for sign-up form
+export const signUpFormSchema = z.object({
+  name: z.string().min(3, "Name must be at least 3 characters"),
+  email: z.email({ message: "Invalid email address" }),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(6, "Confirm Password must be at least 6 characters"),
+}).refine((data)=> data.password=== data.confirmPassword, {
+  message:"Passwords don't match",
+  path:['confirmPassword']
+});
+
