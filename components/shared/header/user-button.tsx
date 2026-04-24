@@ -52,12 +52,18 @@ const UserButton = async ({ locale }: { locale: string }) => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuItem className={"p-0 mb-1 "}>
-              <form action={signOutUser} className="flex my-2">
+              <form action={signOutUser} className="flex my-2 w-full">
                 <Button
-                  className={"w-full py-4 px-2 h-4 justify-start"}
+                  className={
+                    "w-full py-4 px-2 h-4 justify-start cursor-pointer"
+                  }
                   variant={"ghost"}
                   type="submit"
-                > <LogOut className="me-2" /> {locale === "en" ? "Sign Out" : "تسجيل الخروج"}</Button>
+                >
+                  {" "}
+                  <LogOut className="me-2" />{" "}
+                  {locale === "en" ? "Sign Out" : "تسجيل الخروج"}
+                </Button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuGroup>
