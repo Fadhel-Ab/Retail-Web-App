@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/lib/generated/prisma/client";
+import { PrismaClient } from "@prisma/client"; // ✅
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { neonConfig } from "@neondatabase/serverless";
@@ -22,7 +22,6 @@ const connectionString = process.env.DATABASE_URL!;
 const adapter = connectionString.includes("neon.tech")
   ? new PrismaNeon({ connectionString })
   : new PrismaPg(new Pool({ connectionString }));
-
 
 // 3. Initialize Prisma (No 'any' cast needed now!)
 export const prisma =

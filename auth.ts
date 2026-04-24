@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { compareSync } from "bcrypt-ts-edge";
+import { compare } from "bcrypt-ts-edge";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -28,7 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
         // 2. VERIFY
         if (!user || !user.password) return null;
-        const isValid = compareSync(
+        const isValid = await compare(
           credentials.password as string,
           user.password,
         );

@@ -51,7 +51,7 @@ const SignUpForm = ({ locale }: { locale: string }) => {
             id="name"
             name="name"
             type="text"
-            required
+           
             autoComplete="name"
             defaultValue={defaultSignUpValues.name}
           ></Input>
@@ -63,8 +63,8 @@ const SignUpForm = ({ locale }: { locale: string }) => {
           <Input
             id="email"
             name="email"
-            type="email"
-            required
+            type="text"
+           
             autoComplete="email"
             defaultValue={defaultSignUpValues.email}
           ></Input>
