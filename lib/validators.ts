@@ -1,6 +1,6 @@
 import { email, z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
-import { Prisma } from "./generated/prisma/browser";
+import { Prisma } from "@prisma/client";
 
 // zod schema for inserting product
 const arabicRegex = /^[\u0600-\u06FF\s]+$/;
