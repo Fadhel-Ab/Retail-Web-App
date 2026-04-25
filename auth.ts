@@ -46,12 +46,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    
     async jwt({ token, user, trigger, session }) {
       // 1. Initial Login: Put the ID into the token
       if (user) {
         token.id = user.id;
-        token.role=user.role; // created folder called next-auth.d.ts in the root of the project and added a declaration file to extend the default session and user types to include the role field, this way we can access the role field in the session object without TypeScript errors
+        token.role = user.role; // created folder called next-auth.d.ts in the root of the project and added a declaration file to extend the default session and user types to include the role field, this way we can access the role field in the session object without TypeScript errors
+
+        // if user has no name but has an email, usually from OAuth providers, we can set the name to the email before the @ symbol
+        if ((!user.name || user.name === "NO NAME") && user.email) {
+          const generatedName = user.email.split("@")[0];
+          token.name = generatedName;
+          // Sync the database so it's not "NO NAME" next time
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: token.name },
+          });
+        } else {
+          token.name = user.name;
+        }
       }
 
       // 2. THE MISSING PART: Update the token when the name changes
@@ -63,9 +75,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async session({ session, token }) {
       // 3. Keep the UI in sync with the token
+      console.log(token);
       if (token) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;// This ensures the new name shows up
+        session.user.role = token.role as string; 
+        session.user.name = token.name as string; // This ensures the new name shows up
+        console.log(token);
       }
       return session;
     },
