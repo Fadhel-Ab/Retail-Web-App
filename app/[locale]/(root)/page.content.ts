@@ -61,6 +61,29 @@ const pageContent = {
       }),
       description: t({ en: "Explore our app", ar: "استكشف تطبيقنا" }),
     },
+
+    signUpValidation: {
+      name: t({
+        en: "Name must be at least 3 characters",
+        ar: "الاسم يجب أن يكون على الأقل 3 أحرف",
+      }),
+      email: t({
+        en: "Invalid email address",
+        ar: "البريد الإلكتروني غير صالح",
+      }),
+      password: t({
+        en: "Password must be at least 6 characters",
+        ar: "كلمة المرور يجب أن تكون على الأقل 6 أحرف",
+      }),
+      confirmPassword: t({
+        en: "Confirm Password must be at least 6 characters",
+        ar: "تأكيد كلمة المرور يجب أن تكون على الأقل 6 أحرف",
+      }),
+      mismatch: t({
+        en: "Passwords don't match",
+        ar: "كلمات المرور غير متطابقة",
+      }),
+    },
   },
 } satisfies Dictionary;
 

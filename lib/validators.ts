@@ -1,6 +1,9 @@
 import { email, z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "@prisma/client";
+import { getIntlayer } from "intlayer";
+import { getLocale } from "next-intlayer/server";
+import { getPageContent } from "./custom-hooks/intlayer-hook";
 
 // zod schema for inserting product
 const arabicRegex = /^[\u0600-\u06FF\s]+$/;
@@ -77,8 +80,24 @@ export const signInFormSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-// zod schema for sign-up form
-export const signUpFormSchema = z.object({
+// zod schema for sign-up form in a function to get the translated error messages
+export const createSignUpSchema = async () => {
+  const locale = await getLocale();
+  const { signUpValidation } = await getPageContent("page", locale);
+  return z
+    .object({
+      name: z.string().min(3, signUpValidation.name.value),
+      email: z.email({ message: signUpValidation.email.value }),
+      password: z.string().min(6, signUpValidation.password.value),
+      confirmPassword: z.string().min(6, signUpValidation.confirmPassword.value),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: signUpValidation.mismatch.value,
+      path: ["confirmPassword"],
+    });
+};
+// zod schema for sign-up form : regular version without translated error messages
+/*export const signUpFormSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
   email: z.email({ message: "Invalid email address" }),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -86,5 +105,4 @@ export const signUpFormSchema = z.object({
 }).refine((data)=> data.password=== data.confirmPassword, {
   message:"Passwords don't match",
   path:['confirmPassword']
-});
-
+});*/
