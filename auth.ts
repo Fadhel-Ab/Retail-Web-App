@@ -3,6 +3,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt-ts-edge";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -75,14 +77,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async session({ session, token }) {
       // 3. Keep the UI in sync with the token
-      console.log(token);
+      //console.log(token);
       if (token) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string; 
+        session.user.role = token.role as string;
         session.user.name = token.name as string; // This ensures the new name shows up
-        console.log(token);
+        //console.log(token);
       }
       return session;
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    /*authorized({ request, auth }: any) {
+      // This callback runs on every request to check if the user is authorized to access the route. We can use it to implement role-based access control (RBAC).
+      // For example, if we want to restrict access to certain routes based on user roles, we can do something like this:
+      
+    },*/
   },
 });

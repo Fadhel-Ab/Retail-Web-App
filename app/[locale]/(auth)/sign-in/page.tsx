@@ -17,7 +17,7 @@ import { redirect } from "next/navigation";
 type Props = {
   params: Promise<{ locale: string }>;
 };
-
+// can be done with getLocale in the layout and passing it down as a prop to avoid multiple calls, but this is just for demonstration also this is better
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
 

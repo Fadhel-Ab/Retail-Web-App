@@ -1,9 +1,5 @@
-import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
-
 import ProductList from "@/components/shared/products/product-list";
 import { getLatestProducts } from "@/lib/actions/products.actions";
-import { formatNumberWithDecimal } from "@/lib/utils";
-
 import { Metadata } from "next";
 
 
@@ -28,8 +24,8 @@ const Homepage = async ({
 }) => {
   const { locale } = await params;
   //const { header } = await getPageContent("page", locale); if needed
-  console.log(` language: ${locale}`);
-  console.log(await getLatestProducts());
+  /*console.log(` language: ${locale}`);
+  console.log(await getLatestProducts());*/ //testing
   const data = await getLatestProducts();
 
   return (

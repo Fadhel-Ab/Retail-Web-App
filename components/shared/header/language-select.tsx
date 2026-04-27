@@ -13,7 +13,8 @@ import { getLocaleName, getLocalizedUrl, Locales } from "intlayer";
 import { useLocale } from "next-intlayer";
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { Globe } from "lucide-react";
+
 
 export const LocaleSwitcher = () => {
   const { locale, pathWithoutLocale, availableLocales, setLocale } =
@@ -26,14 +27,16 @@ export const LocaleSwitcher = () => {
       <DropdownMenuTrigger
         render={
           <Button variant="ghost" onClick={() => setClicked(!clicked)}>
-            {clicked ? <ChevronDown className="ms-2 rotate-180" /> : <ChevronDown className="ms-2" /> }
-            {getLocaleName(locale, locale)}
+            <Globe className="ms-2" />
+            {locale === Locales.ENGLISH ? "Language" : "اللغة"}
           </Button>
         }
       ></DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-base">Language</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-base">
+            {locale === Locales.ENGLISH ? "Language" : "اللغة"}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuCheckboxItem
             render={

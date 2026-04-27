@@ -10,6 +10,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { useSearchParams } from "next/navigation";
 
+
 const SignUpForm = ({ locale }: { locale: string }) => {
   const [state, formAction] = useActionState(SignUpUser, {
     success: false,

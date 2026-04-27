@@ -1,9 +1,10 @@
-import { email, z } from "zod";
+import { email, transform, z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "@prisma/client";
 import { getIntlayer } from "intlayer";
 import { getLocale } from "next-intlayer/server";
 import { getPageContent } from "./custom-hooks/intlayer-hook";
+import { it } from "node:test";
 
 // zod schema for inserting product
 const arabicRegex = /^[\u0600-\u06FF\s]+$/;
@@ -89,7 +90,9 @@ export const createSignUpSchema = async () => {
       name: z.string().min(3, signUpValidation.name.value),
       email: z.email({ message: signUpValidation.email.value }),
       password: z.string().min(6, signUpValidation.password.value),
-      confirmPassword: z.string().min(6, signUpValidation.confirmPassword.value),
+      confirmPassword: z
+        .string()
+        .min(6, signUpValidation.confirmPassword.value),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: signUpValidation.mismatch.value,
@@ -106,3 +109,36 @@ export const createSignUpSchema = async () => {
   message:"Passwords don't match",
   path:['confirmPassword']
 });*/
+
+export const cartItemSchema = z.object({
+  productId: z.string().min(1, "Product is required"),
+  name: z.string().min(1, "Name is required"),
+  nameAr: z
+    .string()
+    .regex(arabicRegex, {
+      message: "Arabic Name Must contain only Arabic characters",
+    })
+    .min(3, "Arabic Name Must be at least 3 characters"),
+  slug: z.string().min(1, "Product is required"),
+  qty: z.number().int().nonnegative("Quantity must be positive number"),
+  image: z.string().min(1, "Product is required"),
+  price: z
+    .string()
+    .refine((val) => priceRegex.test(formatNumberWithDecimal(val)), {
+      message: "Price must have exactly 2 decimal places ",
+    }),
+});
+// zod schema for pushing cart to database
+export const insertCartSchema = z.object({
+  items: z
+    .array(cartItemSchema)
+    .transform((items) =>
+      items.map((item) => ({ ...item, price: new Prisma.Decimal(item.price) })),
+    ),
+  itemsPrice: currency,
+  totalPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+  sessionCartId: z.string().min(1, "Session card id is required"),
+  userId: z.string().optional().nullable(), // this will be null for guest users
+});

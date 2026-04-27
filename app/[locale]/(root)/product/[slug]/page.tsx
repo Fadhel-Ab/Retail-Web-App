@@ -1,13 +1,12 @@
 import { getProductBySlug } from "@/lib/actions/products.actions";
-import { Button } from "@/components/ui/button";
+
 import ProductPrice from "@/components/shared/products/product-price";
 import { Card, CardContent } from "@/components/ui/card";
 import { notFound } from "next/navigation";
 import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
 import { Badge } from "@/components/ui/badge";
 import ProductImages from "@/components/shared/products/product-images";
-
-
+import AddToCart from "@/components/shared/products/add-to-cart";
 
 
 const ProductDetailsPage = async ({
@@ -17,10 +16,9 @@ const ProductDetailsPage = async ({
 }) => {
   const { slug, locale } = await params;
   const product = await getProductBySlug(slug);
-  console.log(locale);
 
   if (!product) notFound();
-  const {productPage} = await getPageContent("page", locale);
+  const { productPage } = await getPageContent("page", locale);
   const translatedName = locale === "en" ? product.name : product.nameAr;
   const translatedBrand = locale === "en" ? product.brand : product.brandAr;
   const translatedCategory =
@@ -32,7 +30,9 @@ const ProductDetailsPage = async ({
     <section>
       <div className="grid grid-cols-1 md:grid-cols-5">
         {/* images col */}
-        <div className="col-span-2"><ProductImages images={product.images} /></div>
+        <div className="col-span-2">
+          <ProductImages images={product.images} />
+        </div>
         {/* details col */}
         <div className="col-span-2 p-5">
           <div className="flex flex-col gap-6">
@@ -76,7 +76,18 @@ const ProductDetailsPage = async ({
               </div>
               {product.stock > 0 && (
                 <div className="flex-center">
-                  <Button className={"w-full"}>{productPage.addToCart}</Button>
+                  {/* <Button className={"w-full"}>{productPage.addToCart}</Button> */}
+                  <AddToCart
+                    item={{
+                      productId: product.id,
+                      name: product.name,
+                      nameAr: product.nameAr,
+                      slug: product.slug,
+                      price: product.price,
+                      qty: 1,
+                      image: product.images![0],
+                    }} locale={locale}
+                  />
                 </div>
               )}
             </CardContent>

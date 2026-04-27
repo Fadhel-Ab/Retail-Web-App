@@ -20,7 +20,7 @@ const Menu = ({ locale }: { locale: string }) => {
   const { header } = useIntlayer("page", locale);
   
   const dir = getHTMLTextDir(locale);
-  console.log(`dir: ${dir}`);
+ 
   return (
     <div className="flex justify-end gap-3">
       <nav className="hidden md:flex w-full max-w-xs gap-1">

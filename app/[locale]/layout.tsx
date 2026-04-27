@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "../../assets/styles/globals.css";
 import { IntlayerServerProvider } from "next-intlayer/server";
+export { generateStaticParams } from "next-intlayer";
 import { getHTMLTextDir } from "intlayer";
 import {
   getIntlayer,
@@ -10,6 +11,7 @@ import {
 } from "next-intlayer";
 import { ThemeProvider } from "@/components/shared/header/theme-provider";
 import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
+import { Toaster } from "@/components/ui/sonner";
 
 const rubik = Rubik({
   subsets: ["arabic", "latin"], // Essential for bilingual support       // Choose the weights you need
@@ -35,7 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Use getIntlayer to fetch your translated content declaration
   // Ensure you have a content declaration file for 'app-metadata'
   const { metadata } = getPageContent("page", locale);
-  console.log(metadata);
+  //testing
+  // console.log(metadata);
   return {
     title: {
       default: metadata.title.value,
@@ -60,7 +63,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const LocaleLayout: NextLayoutIntlayer = async ({ children, params }) => {
   const { locale } = await params;
   const dir = getHTMLTextDir(locale);
-  console.log(dir);
+  // testing
+  // console.log(dir);
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
       <body className={rubik.className}>
@@ -75,6 +79,7 @@ const LocaleLayout: NextLayoutIntlayer = async ({ children, params }) => {
               {children}
             </IntlayerClientProvider>
           </IntlayerServerProvider>
+          <Toaster  position={locale === "en" ? "bottom-right" : "bottom-left"} richColors/>
         </ThemeProvider>
       </body>
     </html>
