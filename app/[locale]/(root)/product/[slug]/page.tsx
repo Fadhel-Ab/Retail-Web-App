@@ -1,5 +1,4 @@
 import { getProductBySlug } from "@/lib/actions/products.actions";
-
 import ProductPrice from "@/components/shared/products/product-price";
 import { Card, CardContent } from "@/components/ui/card";
 import { notFound } from "next/navigation";
@@ -7,6 +6,7 @@ import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
 import { Badge } from "@/components/ui/badge";
 import ProductImages from "@/components/shared/products/product-images";
 import AddToCart from "@/components/shared/products/add-to-cart";
+import { getMyCart } from "@/lib/actions/cart.actions";
 
 
 const ProductDetailsPage = async ({
@@ -16,6 +16,7 @@ const ProductDetailsPage = async ({
 }) => {
   const { slug, locale } = await params;
   const product = await getProductBySlug(slug);
+  const cart=await getMyCart();
 
   if (!product) notFound();
   const { productPage } = await getPageContent("page", locale);
@@ -78,6 +79,7 @@ const ProductDetailsPage = async ({
                 <div className="flex-center">
                   {/* <Button className={"w-full"}>{productPage.addToCart}</Button> */}
                   <AddToCart
+                  cart={cart}
                     item={{
                       productId: product.id,
                       name: product.name,

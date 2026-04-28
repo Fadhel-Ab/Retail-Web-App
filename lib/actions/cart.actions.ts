@@ -222,7 +222,13 @@ export async function removeItemFromCart(productId: string) {
     });
     revalidatePath(`/${locale}/product/${product.slug}`);
 
-    return { success: true, message: `${product.name} was removed from cart` };
+    return {
+      success: true,
+      message:
+        locale == "en"
+          ? `${product.name} was removed from cart`
+          : `تمت إزالته من سلة التسوق ${product.nameAr}`,
+    };
   } catch (error) {
     return { success: false, message: formatError(error) };
   }

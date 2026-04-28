@@ -1,46 +1,96 @@
 "use client";
-
-import { CartItem } from "@/types";
+import { Cart, CartItem, CartResponse } from "@/types";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Minus, Loader2 } from "lucide-react";
 import { toast, useSonner } from "sonner";
-import { addItemToCart } from "@/lib/actions/cart.actions";
+import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
+import { useTransition } from "react";
 
-const AddToCart = ({ item, locale }: { item: CartItem; locale: string }) => {
+const AddToCart = ({
+  item,
+  locale,
+  cart,
+}: {
+  item: CartItem;
+  locale: string;
+  cart?: CartResponse;
+}) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const handleAddToCart = async () => {
-    const res = await addItemToCart(item);
-    //handle failure adding to cart
-    if (!res.success) {
-      toast.error(res.message);
-      console.log(res.message)
+    startTransition(async () => {
+      const res = await addItemToCart(item);
+      //handle failure adding to cart
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+
+      //handle success add to cart
+      toast.success(res.message, {
+        action: (
+          <Button
+            className={
+              "bg-primary text-primary-foreground hover:bg-muted-foreground cursor-pointer"
+            }
+            onClick={() => router.push(`/${locale}/cart`)}
+          >
+            {locale === "en" ? "Go to Cart" : "الذهاب إلى السلة"}
+          </Button>
+        ),
+      });
       return;
-    }
-    
-    //handle success add to cart
-    toast.success( res.message, {
-      action: (
-        <Button
-          className={
-            "bg-primary text-primary-foreground hover:bg-muted-foreground cursor-pointer"
-          }
-          onClick={() => router.push(`/${locale}/cart`)}
-        >
-          {locale === "en" ? "Go to Cart" : "الذهاب إلى السلة"}
-        </Button>
-      ),
+    });
+  };
+  // check if item is in the cart
+  const existItem =
+    cart && cart.items.find((i) => i.productId === item.productId);
+
+  //handle removal
+  const handleRemoveFromCart = async () => {
+    startTransition(async () => {
+      const res = await removeItemFromCart(item.productId);
+
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+      toast.success(res.message);
+      return;
     });
   };
 
-  return (
+  return existItem ? (
+    <div className="">
+      <Button type="button" variant={"outline"} onClick={handleRemoveFromCart}>
+        {isPending ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Minus className="h-4 w-5" />
+        )}
+      </Button>
+      <span className="px-2 text-2xl">{existItem.qty}</span>
+      <Button type="button" variant={"outline"} onClick={handleAddToCart}>
+        {isPending ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <PlusIcon className="h-4 w-5" />
+        )}
+      </Button>
+    </div>
+  ) : (
     <Button
       className={"w-full cursor-pointer"}
       type="button"
       onClick={handleAddToCart}
     >
-      <PlusIcon />
+      {isPending ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <PlusIcon className="h-4 w-5" />
+      )}
       {locale === "en" ? "Add to Cart" : "أضف إلى السلة"}
     </Button>
   );
