@@ -15,11 +15,12 @@ const AddToCart = ({ item, locale }: { item: CartItem; locale: string }) => {
     //handle failure adding to cart
     if (!res.success) {
       toast.error(res.message);
+      console.log(res.message)
       return;
     }
-    const translatedName = locale === "en" ? item.name : item.nameAr;
+    
     //handle success add to cart
-    toast.success(translatedName + res.message, {
+    toast.success( res.message, {
       action: (
         <Button
           className={

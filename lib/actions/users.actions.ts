@@ -21,12 +21,12 @@ export async function signInWithCredentials(
     });
 
     await signIn("credentials", user, { redirectTo: callbackUrl });
-    return { success: true, message: "Signed in successfully" };
+    return { success: true, message: locale === "en" ? "Signed in successfully" : "تم تسجيل الدخول بنجاح" };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
     }
-    return { success: false, message: "Invalid Email or Password" };
+    return { success: false, message: locale === "en" ? "Invalid email or password" : "البريد الإلكتروني أو كلمة المرور غير صحيحة" };
   }
 }
 //sign out user
