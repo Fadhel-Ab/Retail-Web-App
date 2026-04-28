@@ -123,10 +123,11 @@ export const cartItemSchema = z.object({
   qty: z.number().int().nonnegative("Quantity must be positive number"),
   image: z.string().min(1, "Product is required"),
   price: z
-    .string()
-    .refine((val) => priceRegex.test(formatNumberWithDecimal(val)), {
+    .instanceof(Prisma.Decimal)
+    .or(z.string())
+    .refine((val) => priceRegex.test(formatNumberWithDecimal(val.toString())), {
       message: "Price must have exactly 2 decimal places ",
-    }),
+    }) .transform((val) => val.toString()),
 });
 // zod schema for pushing cart to database
 export const insertCartSchema = z.object({
@@ -139,6 +140,17 @@ export const insertCartSchema = z.object({
   totalPrice: currency,
   shippingPrice: currency,
   taxPrice: currency,
+  sessionCartId: z.string().min(1, "Session card id is required"),
+  userId: z.string().optional().nullable(), // this will be null for guest users
+});
+
+
+export const CartResponseSchema = z.object({
+  items: z.array(cartItemSchema),
+  itemsPrice: z.preprocess((val) => String(val), z.string()),
+  totalPrice: z.preprocess((val) => String(val), z.string()),
+  shippingPrice: z.preprocess((val) => String(val), z.string()),
+  taxPrice: z.preprocess((val) => String(val), z.string()),
   sessionCartId: z.string().min(1, "Session card id is required"),
   userId: z.string().optional().nullable(), // this will be null for guest users
 });

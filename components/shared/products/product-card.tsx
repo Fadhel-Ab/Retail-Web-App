@@ -17,15 +17,15 @@ const ProductCard = async ({
   const translatedBrand = locale === "en" ? product.brand : product.brandAr;
   return (
     <Card className="w-full max-w-sm">
-      <CardHeader>
+      <CardHeader className="w-75 h-75 ">
         <Link href={`${locale}/product/${product.slug}`}>
           <Image
+          className="object-cover"
             src={product.images[0]}
             alt={translatedName}
             height={300}
             width={300}
             priority={true}
-            className="w-75 h-75 object-cover"
           />
         </Link>
       </CardHeader>
