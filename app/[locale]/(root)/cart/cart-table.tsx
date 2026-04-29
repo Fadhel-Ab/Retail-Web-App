@@ -142,6 +142,7 @@ const CartTable = ({
               </TableBody>
             </Table>
           </div>
+          <span> testing<br/> total with taxes:<br></br> {cart.totalPrice}</span>
         </div>
       )}
     </>
