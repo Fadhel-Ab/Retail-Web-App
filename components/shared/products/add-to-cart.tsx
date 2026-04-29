@@ -3,7 +3,7 @@ import { Cart, CartItem, CartResponse } from "@/types";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { PlusIcon, Minus, Loader2 } from "lucide-react";
-import { toast, useSonner } from "sonner";
+import { toast } from "sonner";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
 import { useTransition } from "react";
 

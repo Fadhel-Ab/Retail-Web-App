@@ -28,7 +28,7 @@ const Menu = ({ locale }: { locale: string }) => {
         <ModeToggle />
         <Button
           nativeButton={false}
-          render={<Link href={`${locale}/cart`} />}
+          render={<Link href={`/${locale}/cart`} />}
           variant="ghost"
         >
           <ShoppingCart /> {header.cart}
