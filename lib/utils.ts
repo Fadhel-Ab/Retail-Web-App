@@ -1,4 +1,3 @@
-
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { number } from "zod";
@@ -20,12 +19,28 @@ export function formatNumberWithDecimal(num: string): string {
 }
 
 export function round2(value: number | string) {
-  if (typeof value ==='number') {
-    return Math.round((value+Number.EPSILON)*100) / 100;
-  }else if(typeof value ==='string') {
-return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
-  }else {
-    throw new Error('Value is not a number or a string');
+  if (typeof value === "number") {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
+  } else if (typeof value === "string") {
+    return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+  } else {
+    throw new Error("Value is not a number or a string");
   }
+}
+//format currency
+const CURRENCY_FORMATTER = Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+});
 
+//apply the formatter on givin prices
+export function formatCurrency(amount: number | string | null) {
+  if (typeof amount ==='number') {
+    return CURRENCY_FORMATTER.format(amount);
+  } else if (typeof amount === "string"){
+    return CURRENCY_FORMATTER.format(Number(amount));
+  }else {
+    return NaN;
+  }
 }

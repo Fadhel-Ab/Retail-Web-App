@@ -8,6 +8,7 @@ import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
 import { ArrowRight, Divide, Loader, Minus, Plus } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { formatCurrency } from "@/lib/utils";
 import {
   Table,
   TableHeader,
@@ -17,6 +18,9 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { ChevronRight } from "lucide-react";
 
 const CartTable = ({
   cart,
@@ -136,13 +140,77 @@ const CartTable = ({
                         )}
                       </Button>
                     </TableCell>
-                    <TableCell className="text-right">${item.price}</TableCell>
+                    <TableCell className="text-right">
+                      ${(Number(item.price) * item.qty).toFixed(2)}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
-          <span> testing<br/> total with taxes:<br></br> {cart.totalPrice}</span>
+          <Card>
+            <CardTitle className="ps-3 text-xl">
+              {locale === "en" ? "Summary" : "الملخص"}
+            </CardTitle>
+            <CardContent className="gap-4">
+              <Separator className={"h-px "} />
+
+              <div className="text-lg mt-5">
+                <div className="flex flex-between">
+                  <span>
+                    {locale === "en" ? "Items Price" : "سعر المنتجات"}
+                  </span>
+                  {formatCurrency(cart.itemsPrice)}
+                  <br></br>
+                </div>
+                <div className="flex flex-between">
+                  <span>{locale === "en" ? "Tax 15%" : "الضريبة 15%"}</span>
+                  {formatCurrency(cart.taxPrice)}
+                  <br></br>
+                </div>
+                <div className="flex flex-between">
+                  <span>{locale === "en" ? "Shipping" : "الشحن"}</span>
+                  {formatCurrency(cart.shippingPrice)}
+                  <br></br>
+                </div>
+              </div>
+            </CardContent>
+            <CardContent>
+              <Separator className={"h-px "} />
+            </CardContent>
+            <CardContent>
+              <div className="flex flex-between text-lg font-bold">
+                <span>
+                  {locale === "en" ? "Total Price" : "السعر الإجمالي"}
+                </span>
+                {formatCurrency(cart.totalPrice)}
+              </div>
+            </CardContent>
+            <CardContent>
+              <Separator className={"h-px "} />
+            </CardContent>
+            <CardContent>
+              <Button
+                className={"w-full"}
+                disabled={isPending}
+                onClick={() =>
+                  startTransition(() =>
+                    router.push(`/${locale}/shipping-address`),
+                  )
+                }
+              >
+                {" "}
+                {isPending ? (
+                  <Loader className="w-4 h-4 animate-spin" />
+                ) : (
+                  <ChevronRight
+                    className={locale === "ar" ? "rotate-180" : ""}
+                  />
+                )}{" "}
+                {locale === "en" ? "Checkout" : "الدفع"}
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       )}
     </>

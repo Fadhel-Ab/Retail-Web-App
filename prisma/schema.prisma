@@ -105,3 +105,29 @@ model Cart {
   createdAt     DateTime @default(now()) @db.Timestamp(6)
   user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+model Order {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String?     // Optional if guest checkout
+  status        OrderStatus @default(PENDING)
+  totalPrice    Decimal  @db.Decimal(12, 3)
+  sessionCartId String      // To link the cart to the order
+  items         OrderItem[]
+  createdAt     DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  quantity  Int
+  price     Decimal  @db.Decimal(12, 2)   // Price at the time of purchase
+}

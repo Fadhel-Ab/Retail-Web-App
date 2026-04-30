@@ -5,7 +5,6 @@ import { IntlayerServerProvider } from "next-intlayer/server";
 export { generateStaticParams } from "next-intlayer";
 import { getHTMLTextDir } from "intlayer";
 import {
-  getIntlayer,
   IntlayerClientProvider,
   type NextLayoutIntlayer,
 } from "next-intlayer";

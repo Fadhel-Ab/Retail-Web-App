@@ -17,6 +17,7 @@
     "@prisma/adapter-neon": "^7.7.0",
     "@prisma/adapter-pg": "^7.7.0",
     "@radix-ui/react-slot": "^1.2.4",
+    "@tap-payments/benefit-pay-button": "^1.3.0",
     "add": "^2.0.6",
     "bcrypt-ts-edge": "^3.0.1",
     "class-variance-authority": "^0.7.1",
