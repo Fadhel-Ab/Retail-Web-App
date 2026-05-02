@@ -12,8 +12,16 @@ export const defaultSignInValues = {
   password: "",
 };
 export const defaultSignUpValues = {
-  name:'',
+  name: "",
   email: "",
   password: "",
-  confirmPassword:'',
+  confirmPassword: "",
+};
+
+export const defaultShippingAddress = {
+  fullName: "",
+  streetAddress: "",
+  city: "",
+  postalCode: "",
+  country: "",
 };

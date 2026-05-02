@@ -10,9 +10,8 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { useSearchParams } from "next/navigation";
 
-
 const SignUpForm = ({ locale }: { locale: string }) => {
-  const [state, formAction] = useActionState(SignUpUser, {
+  const [state, formAction] = useActionState(SignUpUser, {  
     success: false,
     message: "",
   });
@@ -39,8 +38,10 @@ const SignUpForm = ({ locale }: { locale: string }) => {
     );
   };
 
+ // best practice to make form method post default is (get) for security  
+// although next.js handles this or force post on formAction its still best practice
   return (
-    <form action={formAction}>
+    <form action={formAction} method="POST"> 
       <input type="hidden" name="callbackUrl" value={callbackUrl ?? `/`} />
       <input type="hidden" name="locale" value={locale} />
       <div className="space-y-6">
@@ -52,7 +53,7 @@ const SignUpForm = ({ locale }: { locale: string }) => {
             id="name"
             name="name"
             type="text"
-           required
+            required
             autoComplete="name"
             defaultValue={defaultSignUpValues.name}
           ></Input>

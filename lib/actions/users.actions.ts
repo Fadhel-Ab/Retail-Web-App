@@ -1,11 +1,18 @@
 "use server";
 
-import { signInFormSchema, createSignUpSchema } from "../validators";
-import { signIn, signOut } from "@/auth";
+import {
+  signInFormSchema,
+  createSignUpSchema,
+  createShippingAddressSchema,
+} from "../validators";
+import { auth, signIn, signOut } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { hashSync } from "bcrypt-ts-edge";
 import { prisma } from "@/lib/prisma";
 import { formatError } from "@/lib/server-side-utils";
+import { getLocale } from "next-intlayer/server";
+import { ShippingAddress } from "@/types";
+import { success } from "zod";
 
 //Sign in user with credentials
 export async function signInWithCredentials(
@@ -21,12 +28,22 @@ export async function signInWithCredentials(
     });
 
     await signIn("credentials", user, { redirectTo: callbackUrl });
-    return { success: true, message: locale === "en" ? "Signed in successfully" : "تم تسجيل الدخول بنجاح" };
+    return {
+      success: true,
+      message:
+        locale === "en" ? "Signed in successfully" : "تم تسجيل الدخول بنجاح",
+    };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
     }
-    return { success: false, message: locale === "en" ? "Invalid email or password" : "البريد الإلكتروني أو كلمة المرور غير صحيحة" };
+    return {
+      success: false,
+      message:
+        locale === "en"
+          ? "Invalid email or password"
+          : "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    };
   }
 }
 //sign out user
@@ -35,7 +52,8 @@ export async function signOutUser() {
 }
 //sign up user
 export async function SignUpUser(prevState: unknown, formData: FormData) {
-  const signUpFormSchema = await createSignUpSchema();
+  const locale = await getLocale();
+  const signUpFormSchema = await createSignUpSchema(locale);
   try {
     const user = signUpFormSchema.parse({
       name: formData.get("name"),
@@ -68,5 +86,43 @@ export async function SignUpUser(prevState: unknown, formData: FormData) {
       throw error;
     }
     return { success: false, message: formatError(error) };
+  }
+}
+
+//get user by the ID
+export async function getUserById(userId: string) {
+  const user = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+  if (!user) throw new Error("User not found");
+  return user;
+}
+
+//update the user address
+export async function updateUserAddress(data: ShippingAddress) {
+  const locale = await getLocale();
+  try {
+    const session = await auth();
+
+    const currentUser = await prisma.user.findFirst({
+      where: { id: session?.user?.id },
+    });
+    if (!currentUser) throw new Error("User not found");
+    const ShippingAddressSchema = await createShippingAddressSchema(locale);
+    const address = ShippingAddressSchema.parse(data);
+
+    await prisma.user.update({
+      where: {id: currentUser.id},
+      data:{address}
+    });
+    return {
+      success:true,
+      message: locale ==='en' ? 'User update successfully':"تم تحديث المستخد بنجاح"
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
   }
 }

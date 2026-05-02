@@ -14,6 +14,7 @@ import { APP_NAME } from "@/lib/constants";
 import CredentialSignInForm from "./credentials-signing-form";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { localizedRedirect } from "@/lib/redirect";
 type Props = {
   params: Promise<{ locale: string }>;
 };
@@ -38,14 +39,7 @@ const SignInPage = async ({
   const { callbackUrl } = await searchParams;
     const session = await auth();
     if (session) {
-      // 1. Ensure callbackUrl is a string
-      const destination = typeof callbackUrl === "string" ? callbackUrl : "/";
-
-      // 2. Security: Only redirect if it's a relative path (starts with /)
-      // This prevents redirecting to external malicious sites
-      const safeRedirect = destination.startsWith("/") ? destination : "/";
-
-      redirect(safeRedirect);
+     return localizedRedirect(callbackUrl || "/", locale);
     }
   return (
     <div className="w-full max-w-md mx-auto">

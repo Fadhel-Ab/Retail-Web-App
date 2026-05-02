@@ -1,10 +1,7 @@
-import { email, transform, z } from "zod";
+import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "@prisma/client";
-import { getIntlayer } from "intlayer";
-import { getLocale } from "next-intlayer/server";
 import { getPageContent } from "./custom-hooks/intlayer-hook";
-import { it } from "node:test";
 
 // zod schema for inserting product
 const arabicRegex = /^[\u0600-\u06FF\s]+$/;
@@ -82,8 +79,7 @@ export const signInFormSchema = z.object({
 });
 
 // zod schema for sign-up form in a function to get the translated error messages
-export const createSignUpSchema = async () => {
-  const locale = await getLocale();
+export const createSignUpSchema = async (locale: string) => {
   const { signUpValidation } = await getPageContent("page", locale);
   return z
     .object({
@@ -148,7 +144,6 @@ export const insertCartSchema = z.object({
   userId: z.string().optional().nullable(), // this will be null for guest users
 });
 
-
 export const CartResponseSchema = z.object({
   id: z.string(),
   items: z.array(cartItemSchema),
@@ -159,3 +154,25 @@ export const CartResponseSchema = z.object({
   sessionCartId: z.string().min(1, "Session card id is required"),
   userId: z.string().optional().nullable(), // this will be null for guest users
 });
+
+export const createShippingAddressSchema = (locale: string) => {
+  const translatedMessage =
+    locale === "en"
+      ? " must be at least 3 characters"
+      : " يجب أن يتكون من 3 أحرف على الأقل";
+
+  return z.object({
+    fullName: z.string().min(3, {
+      message: translatedMessage,
+    }),
+    streetAddress: z.string().min(3, translatedMessage),
+    city: z.string().min(3, translatedMessage),
+    postalCode: z
+      .union([z.string().min(3, translatedMessage), z.literal("")])
+      .optional()
+      .nullable(),
+    country: z.string().min(3, translatedMessage),
+    lat: z.number().optional(),
+    lng: z.number().optional(),
+  });
+};
