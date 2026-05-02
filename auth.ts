@@ -4,7 +4,6 @@ import prisma from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt-ts-edge";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -65,6 +64,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           });
         } else {
           token.name = user.name;
+        }
+        if (trigger === "signIn" || trigger === "signUp") {
+          const cookieObject = await cookies();
+          const sessionCartId = cookieObject.get("sessionCartId")?.value;
+
+          if  (sessionCartId) {
+            const sessionCart = await prisma.cart.findFirst({
+              where: { sessionCartId: sessionCartId },
+            });
+            if (sessionCart) {
+              await prisma.cart.deleteMany({
+                where: { userId: user.id },
+              });
+              await prisma.cart.update({
+                where: { id: sessionCart.id },
+                data: { userId: user.id },
+              });
+            }
+          }
         }
       }
 
