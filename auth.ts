@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { getLocale } from "next-intlayer/server";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -69,7 +70,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const cookieObject = await cookies();
           const sessionCartId = cookieObject.get("sessionCartId")?.value;
 
-          if  (sessionCartId) {
+          if (sessionCartId) {
             const sessionCart = await prisma.cart.findFirst({
               where: { sessionCartId: sessionCartId },
             });
@@ -105,10 +106,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    /*authorized({ request, auth }: any) {
-      // This callback runs on every request to check if the user is authorized to access the route. We can use it to implement role-based access control (RBAC).
-      // For example, if we want to restrict access to certain routes based on user roles, we can do something like this:
-      
-    },*/
+    async authorized({ request, auth }: any) {
+      const protectedPaths = [
+        /^\/(en|ar)\/shipping-address/,
+        /^\/(en|ar)\/payment-method/,
+        /^\/(en|ar)\/place-order/,
+        /^\/(en|ar)\/profile/,
+        /^\/(en|ar)\/user\/(.*)/,
+        /^\/(en|ar)\/order\/(.*)/,
+        /^\/(en|ar)\/admin/,
+      ];
+
+      const { pathname } = request.nextUrl;
+
+      const isProtected = protectedPaths.some((p) => p.test(pathname));
+
+      if (!auth && isProtected) {
+        const locale = pathname.split("/")[1] || "en";
+
+        return Response.redirect(
+          new URL(`/${locale}/sign-in`, request.nextUrl),
+        );
+      }
+
+      return true;
+    },
   },
 });
