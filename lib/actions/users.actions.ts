@@ -50,7 +50,10 @@ export async function signInWithCredentials(
 }
 //sign out user
 export async function signOutUser() {
-  await signOut();
+  const locale = await getLocale();
+  await signOut({
+    redirectTo: `/${locale}/sign-in`,
+  });
 }
 //sign up user
 export async function SignUpUser(prevState: unknown, formData: FormData) {
