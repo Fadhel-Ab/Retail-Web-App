@@ -2,6 +2,7 @@ import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "@prisma/client";
 import { getPageContent } from "./custom-hooks/intlayer-hook";
+import { PAYMENT_METHODS } from "./constants";
 
 // zod schema for inserting product
 const arabicRegex = /^[\u0600-\u06FF\s]+$/;
@@ -175,4 +176,19 @@ export const createShippingAddressSchema = (locale: string) => {
     lat: z.number().optional(),
     lng: z.number().optional(),
   });
+};
+
+//schema for payment method
+export const createPaymentMethodSchema = (locale: string) => {
+  const translatedMessage =
+    locale === "en" ? " Payment method is required " : "طريقة الدفع مطلوبة";
+
+  return z
+    .object({
+      type: z.string().min(1, translatedMessage),
+    })
+    .refine((data) => PAYMENT_METHODS.includes(data.type),{
+      path:['type'],
+      message:'invalid payment method'
+    });
 };

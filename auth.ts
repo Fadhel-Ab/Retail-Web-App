@@ -75,13 +75,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               where: { sessionCartId: sessionCartId },
             });
             if (sessionCart) {
-              await prisma.cart.deleteMany({
-                where: { userId: user.id },
-              });
+              // update the cart based on the latest sessionCart
               await prisma.cart.update({
                 where: { id: sessionCart.id },
                 data: { userId: user.id },
               });
+              // find the old carts to delete and keep only the cart with the latest session
+              const oldCarts = await prisma.cart.findMany({
+                where: { userId: user.id },
+              });
+              const cartsToDelete = oldCarts.filter(
+                (item) => item.id !== sessionCart.id,
+              );
+              //Extract just the IDs into an array
+              const idsToDelete = cartsToDelete.map((item) => item.id);
+
+              // 3. Pass that array to prisma
+              await prisma.cart.deleteMany({
+                where: {
+                  id: { in: idsToDelete },
+                },
+              });
+              console.log(`Deleted ${idsToDelete.length} old carts.`);
             }
           }
         }
@@ -107,6 +122,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async authorized({ request, auth }: any) {
+      // Logged in users are authenticated, otherwise redirect to login page
       const protectedPaths = [
         /^\/(en|ar)\/shipping-address/,
         /^\/(en|ar)\/payment-method/,

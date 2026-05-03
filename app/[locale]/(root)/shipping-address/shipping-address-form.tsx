@@ -53,6 +53,7 @@ const ShippingAddressForm = ({
         toast.error(res.message);
         return;
       }
+      toast.success(res.message);
       router.push(`/${locale}/payment-method`);
     });
   };

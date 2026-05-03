@@ -4,6 +4,7 @@ import {
   signInFormSchema,
   createSignUpSchema,
   createShippingAddressSchema,
+  createPaymentMethodSchema,
 } from "../validators";
 import { auth, signIn, signOut } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
@@ -11,8 +12,9 @@ import { hashSync } from "bcrypt-ts-edge";
 import { prisma } from "@/lib/prisma";
 import { formatError } from "@/lib/server-side-utils";
 import { getLocale } from "next-intlayer/server";
-import { ShippingAddress } from "@/types";
-import { success } from "zod";
+import { ShippingAddress, paymentMethod } from "@/types";
+import { success, z } from "zod";
+import { AwardIcon } from "lucide-react";
 
 //Sign in user with credentials
 export async function signInWithCredentials(
@@ -112,13 +114,45 @@ export async function updateUserAddress(data: ShippingAddress) {
     const address = ShippingAddressSchema.parse(data);
 
     await prisma.user.update({
-      where: {id: currentUser.id},
-      data:{address}
+      where: { id: currentUser.id },
+      data: { address },
     });
     return {
-      success:true,
-      message: locale ==='en' ? 'User update successfully':"تم تحديث المستخد بنجاح"
-    }
+      success: true,
+      message:
+        locale === "en" ? "User update successfully" : "تم تحديث المستخد بنجاح",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+}
+
+//update user payment method
+export async function updateUserPaymentMethod(
+  data: paymentMethod,
+  locale: string,
+) {
+  try {
+    const paymentMethodSchema = await createPaymentMethodSchema(locale);
+
+    const session = await auth();
+    const currentUser = await prisma.user.findFirst({
+      where: { id: session?.user?.id },
+    });
+    if (!currentUser) throw new Error("User not found");
+    const paymentMethod = paymentMethodSchema.parse(data);
+
+    await prisma.user.update({
+      where: { id: currentUser.id },
+      data: { paymentMethod: paymentMethod.type },
+    });
+    return {
+      success: true,
+      message: "User updated successfully",
+    };
   } catch (error) {
     return {
       success: false,
