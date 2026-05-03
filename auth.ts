@@ -9,12 +9,12 @@ import { cookies } from "next/headers";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   pages: {
-    signIn: "/sign-in", // Redirects to your custom /app/login/page.tsx
+    signIn: "/sign-in", // Redirects to custom /app/login/page.tsx
     error: "/sign-in", // Custom error page
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60, // 30 days is the default as well
   },
   providers: [
     CredentialsProvider({

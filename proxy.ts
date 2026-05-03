@@ -1,5 +1,5 @@
-// proxy.ts or middleware.ts
-import { auth } from "@/auth"; // Your Auth.js config
+// proxy.ts or middleware.ts 
+import { auth } from "@/auth"; //  Auth.js config
 import { intlayerProxy } from "next-intlayer/proxy";
 import { getLocale } from "next-intlayer/server";
 import { NextResponse } from "next/server"; // no need, intlayer is already expecting the response
@@ -7,7 +7,7 @@ import { locale } from "react-intlayer/server";
 
 export const proxy = auth((req) => {
   
-  // reges pattern for paths we want to protect
+  
   
   // Auth.js will pre-fill req.auth with the user session
   // Then we let Intlayer handle the routing/localization
