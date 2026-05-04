@@ -20,10 +20,12 @@ import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PAYMENT_METHODS } from "@/lib/constants";
-import { paymentMethod } from "@/types";
+
 import z from "zod";
 import { updateUserPaymentMethod } from "@/lib/actions/users.actions";
 import { toast } from "sonner";
+
+export type paymentMethod = z.infer<typeof createPaymentMethodSchema>;
 
 const PaymentMethodForm = ({
   preferredPaymentMethod,

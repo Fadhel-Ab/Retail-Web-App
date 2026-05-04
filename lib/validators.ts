@@ -1,8 +1,11 @@
+
 import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "@prisma/client";
 import { getPageContent } from "./custom-hooks/intlayer-hook";
 import { PAYMENT_METHODS } from "./constants";
+
+
 
 // zod schema for inserting product
 const arabicRegex = /^[\u0600-\u06FF\s]+$/;
@@ -192,3 +195,37 @@ export const createPaymentMethodSchema = (locale: string) => {
       message:'invalid payment method'
     });
 };
+
+//schema for inserting order
+
+export const createInsertOrderSchema = (locale: string) => {
+  const translatedMessage =
+    locale === "en" ? " Payment method is required " : "طريقة الدفع مطلوبة";
+
+  return z.object({
+    userId: z.string().min(1, ""),
+    itemsPrice: currency,
+    shippingPrice: currency,
+    taxPrice: currency,
+    totalPrice: currency,
+    paymentMethod:z.string().refine((data)=>PAYMENT_METHODS.includes(data), {
+      message:''
+    }),
+    shippingAddress:createShippingAddressSchema
+  });
+};
+// schema for inserting an order item 
+export const createInsertOrderItemSchema = (locale: string) => {
+  const translatedMessage =
+    locale === "en" ? " Payment method is required " : "طريقة الدفع مطلوبة";
+
+  return z.object({
+    productId: z.string(),
+    slug: z.string(),
+    image: z.string(),
+    name: z.string(),
+    price:currency,
+    qty:z.number(),
+  });
+};
+
