@@ -135,11 +135,33 @@ const PlaceOrderPage = async ({
                         </Link>
                       </TableCell>
                       <TableCell className="text-center">{item.qty}</TableCell>
-                      <TableCell className="text-end">{formatCurrency(item.price)}</TableCell>
+                      <TableCell className="text-end">${item.price}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
+            </CardContent>
+          </Card>
+        </div>
+        <div>
+          <Card>
+            <CardContent className="px-4 gap-4 space-y-4 text-lg mt-5">
+              <div className="flex justify-between ">
+                <div>{locale === "en" ? "Items" : "العنصر"}</div>
+                <div>{formatCurrency(cart.itemsPrice)}</div>
+              </div>
+              <div className="flex justify-between">
+                <div>{locale === "en" ? "Tax" : "الضريبة"}</div>
+                <div>{formatCurrency(cart.taxPrice)}</div>
+              </div>
+              <div className="flex justify-between">
+                <div>{locale === "en" ? "Shipping" : "الشحن"}</div>
+                <div>{formatCurrency(cart.shippingPrice)}</div>
+              </div>
+              <div className="flex justify-between">
+                <div>{locale === "en" ? "Total Price" : "المبلغ الإجمالي"}</div>
+                <div>{formatCurrency(cart.totalPrice)}</div>
+              </div>
             </CardContent>
           </Card>
         </div>
