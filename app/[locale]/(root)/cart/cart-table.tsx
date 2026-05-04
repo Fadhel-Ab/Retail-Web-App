@@ -50,9 +50,15 @@ const CartTable = ({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Item</TableHead>
-                  <TableHead className="text-center">Quantity</TableHead>
-                  <TableHead className="text-right">Price</TableHead>
+                  <TableHead className="text-start">
+                    {locale === "en" ? "Item" : "العنصر"}
+                  </TableHead>
+                  <TableHead className="text-center">
+                    {locale === "en" ? "Quantity" : "الكمية"}
+                  </TableHead>
+                  <TableHead className="text-end">
+                    {locale === "en" ? "Price" : "السعر"}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
