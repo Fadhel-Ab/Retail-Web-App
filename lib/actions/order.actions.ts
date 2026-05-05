@@ -1,0 +1,101 @@
+"use server";
+
+import { success } from "zod";
+import { formatError } from "../server-side-utils";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { auth } from "@/auth";
+import { getMyCart } from "./cart.actions";
+import prisma from "../prisma";
+import { getUserById } from "./users.actions";
+import { get } from "http";
+import { getLocale } from "next-intlayer/server";
+import { createInsertOrderSchema } from "../validators";
+import { CartItem } from "@/types";
+
+//create order and create the order item
+export async function createOrder() {
+  const locale = await getLocale();
+  try {
+    const session = await auth();
+    if (!session) throw new Error("User is not Authenticated");
+    const cart = await getMyCart();
+    const userId = session?.user?.id;
+    if (!userId) throw new Error("User no found");
+    const user = await getUserById(userId);
+
+    if (!cart || cart.items.length === 0) {
+      return {
+        success: false,
+        message: "your cart is empty",
+        redirectTo: ".cart",
+      };
+    }
+    if (!user.address) {
+      return {
+        success: false,
+        message: "No shipping address",
+        redirectTo: "/shipping-address",
+      };
+    }
+    if (!user.paymentMethod) {
+      return {
+        success: false,
+        message: "No payment method",
+        redirectTo: "/payment-method",
+      };
+    }
+
+    // create the z validation schema and pass the locale
+    const insertOrderSchema = createInsertOrderSchema(locale);
+    // create the order object
+    const order = insertOrderSchema.parse({
+      userId: user.id,
+      shippingAddress: user.address,
+      paymentMethod: user.paymentMethod,
+      itemsPrice: cart.itemsPrice,
+      shippingPrice: cart.shippingPrice,
+      taxPrice: cart.taxPrice,
+      totalPrice: cart.totalPrice,
+    });
+
+    // create the transaction to create order and the order item in database
+    const insertedOrderId = await prisma.$transaction(async (tx) => {
+      // create order
+      const insertedOrder = await tx.order.create({ data: order });
+      // create order items from the car items
+      for (const item of cart.items as CartItem[]) {
+        await tx.orderItem.create({
+          data: {
+            ...item,
+            orderId: insertedOrder.id,
+          },
+        });
+      }
+      // clear the cart after successful order creation
+      await tx.cart.update({
+        where: { id: cart.id },
+        data: {
+          items: [],
+          totalPrice: 0,
+          taxPrice: 0,
+          shippingPrice: 0,
+          itemsPrice: 0,
+        },
+      });
+      return insertedOrder.id;
+    });
+    if (!insertedOrderId) throw new Error("Order not created");
+
+    return {
+      success: true,
+      message: "Order created",
+      redirectTo: `/order/${insertedOrderId}`,
+    };
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+}

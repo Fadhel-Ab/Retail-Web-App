@@ -211,7 +211,7 @@ export const createInsertOrderSchema = (locale: string) => {
     paymentMethod:z.string().refine((data)=>PAYMENT_METHODS.includes(data), {
       message:''
     }),
-    shippingAddress:createShippingAddressSchema
+    shippingAddress:createShippingAddressSchema(locale),
   });
 };
 // schema for inserting an order item 
