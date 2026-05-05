@@ -64,6 +64,27 @@ export async function createOrder() {
       const insertedOrder = await tx.order.create({ data: order });
       // create order items from the car items
       for (const item of cart.items as CartItem[]) {
+        // find product and check stock
+        const product = await tx.product.findFirst({
+          where: { id: item.productId },
+        });
+        if (!product)
+          throw new Error(
+            locale === "en"
+              ? `item not found ${item.name}`
+              : ` المنتج غير موجود ${item.name}`,
+          );
+        if (product.stock < item.qty) {
+          throw new Error(`Insufficient stock for ${product.name}`);
+        }
+        // decrement the stock for the item
+        await tx.product.update({
+          where: { id: item.productId },
+          data: {
+            stock: { decrement: item.qty },
+          },
+        });
+
         await tx.orderItem.create({
           data: {
             ...item,
