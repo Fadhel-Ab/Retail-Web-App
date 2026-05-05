@@ -127,6 +127,7 @@ model OrderItem {
   qty       Int
   price     Decimal @db.Decimal(12, 2)
   name      String
+  nameAr    String
   slug      String
   image     String
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)

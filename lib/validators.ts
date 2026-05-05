@@ -1,11 +1,8 @@
-
 import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "@prisma/client";
 import { getPageContent } from "./custom-hooks/intlayer-hook";
 import { PAYMENT_METHODS } from "./constants";
-
-
 
 // zod schema for inserting product
 const arabicRegex = /^[\u0600-\u06FF\s]+$/;
@@ -126,7 +123,7 @@ export const cartItemSchema = z.object({
     .union([
       z.instanceof(Prisma.Decimal),
       z.string(),
-      z.number(), // ✅ ADD THIS
+      z.number(), 
     ])
     .refine((val) => priceRegex.test(formatNumberWithDecimal(val.toString())), {
       message: "Price must have exactly 2 decimal places ",
@@ -190,9 +187,9 @@ export const createPaymentMethodSchema = (locale: string) => {
     .object({
       type: z.string().min(1, translatedMessage),
     })
-    .refine((data) => PAYMENT_METHODS.includes(data.type),{
-      path:['type'],
-      message:'invalid payment method'
+    .refine((data) => PAYMENT_METHODS.includes(data.type), {
+      path: ["type"],
+      message: "invalid payment method",
     });
 };
 
@@ -208,13 +205,13 @@ export const createInsertOrderSchema = (locale: string) => {
     shippingPrice: currency,
     taxPrice: currency,
     totalPrice: currency,
-    paymentMethod:z.string().refine((data)=>PAYMENT_METHODS.includes(data), {
-      message:''
+    paymentMethod: z.string().refine((data) => PAYMENT_METHODS.includes(data), {
+      message: "",
     }),
-    shippingAddress:createShippingAddressSchema(locale),
+    shippingAddress: createShippingAddressSchema(locale),
   });
 };
-// schema for inserting an order item 
+// schema for inserting an order item
 export const createInsertOrderItemSchema = (locale: string) => {
   const translatedMessage =
     locale === "en" ? " Payment method is required " : "طريقة الدفع مطلوبة";
@@ -224,8 +221,8 @@ export const createInsertOrderItemSchema = (locale: string) => {
     slug: z.string(),
     image: z.string(),
     name: z.string(),
-    price:currency,
-    qty:z.number(),
+    nameAr: z.string(),
+    price: currency,
+    qty: z.number(),
   });
 };
-

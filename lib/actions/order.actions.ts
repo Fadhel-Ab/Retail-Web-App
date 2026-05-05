@@ -68,12 +68,7 @@ export async function createOrder() {
         const product = await tx.product.findFirst({
           where: { id: item.productId },
         });
-        if (!product)
-          throw new Error(
-            locale === "en"
-              ? `item not found ${item.name}`
-              : ` المنتج غير موجود ${item.name}`,
-          );
+        if (!product) throw new Error(`item not found ${item.name}`);
         if (product.stock < item.qty) {
           throw new Error(`Insufficient stock for ${product.name}`);
         }
@@ -110,7 +105,7 @@ export async function createOrder() {
     return {
       success: true,
       message: "Order created",
-      redirectTo: `/order/${insertedOrderId}`,
+      redirectTo: `/order${insertedOrderId}`,
     };
   } catch (error) {
     if (isRedirectError(error)) throw error;

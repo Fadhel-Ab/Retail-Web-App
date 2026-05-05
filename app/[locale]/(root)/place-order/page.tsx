@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 import { formatCurrency } from "@/lib/utils";
+import PlaceOrderForm from "./place-order-form";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -162,6 +163,7 @@ const PlaceOrderPage = async ({
                 <div>{locale === "en" ? "Total Price" : "المبلغ الإجمالي"}</div>
                 <div>{formatCurrency(cart.totalPrice)}</div>
               </div>
+              <PlaceOrderForm locale={locale}/>
             </CardContent>
           </Card>
         </div>
