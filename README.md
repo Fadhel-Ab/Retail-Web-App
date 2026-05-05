@@ -1,5 +1,20 @@
 Deployed on Vercel ([Deployment Link](https://retail-web-app-fadhel.vercel.app/))
 
+you can log in using these test accounts users: [
+    {
+      name: "Ali",
+      email: "admin@example.com",
+      password: hashSync("123456", 10),
+      role: "admin",
+    },
+    {
+      name: "Ahmed",
+      email: "user@example.com",
+      password: hashSync("123456", 10),
+      role: "user",
+    },
+  ],
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
