@@ -5,6 +5,8 @@ import { auth } from "@/auth";
 
 export async function createPaymentCharge(orderId: string) {
   const locale = await getLocale();
+  const postUrl = `${process.env.TAP_WEBHOOK_URL}api/paymentResponse`;
+  console.log("Webhook URL:", postUrl);
 
   const order = await prisma.order.findUnique({ where: { id: orderId } });
   if (!order) throw new Error("Order not found");
