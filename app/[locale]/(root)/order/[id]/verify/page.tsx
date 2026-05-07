@@ -1,0 +1,15 @@
+import PaymentStatus from "./payment-status";
+
+// server component - page.tsx
+export default async function PaymentPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ tap_id: string }>;
+}) {
+  const { tap_id } = await searchParams;
+  const { id } = await params;
+
+  return <PaymentStatus tapId={tap_id} orderId={id} />;
+}

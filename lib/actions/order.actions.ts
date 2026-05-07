@@ -9,8 +9,9 @@ import prisma from "../prisma";
 import { getUserById } from "./users.actions";
 import { get } from "http";
 import { getLocale } from "next-intlayer/server";
-import { createInsertOrderSchema } from "../validators";
+import { createInsertOrderSchema, orderResponseSchema } from "../validators";
 import { CartItem } from "@/types";
+import { toPlainObject } from "../utils";
 
 //create order and create the order item
 export async function createOrder() {
@@ -114,4 +115,21 @@ export async function createOrder() {
       message: formatError(error),
     };
   }
+}
+
+// get order by id 
+export async function getOrderById(orderId:string) {
+  const data=await prisma.order.findFirst({
+    where:{id:orderId},
+    include:{
+      orderItems:true,
+      user:{
+        select: {
+          name:true,
+          email:true,
+        }
+      }
+    }
+  });
+  return orderResponseSchema.parse(data);
 }

@@ -11,7 +11,7 @@ import {
 import { ThemeProvider } from "@/components/shared/header/theme-provider";
 import { getPageContent } from "@/lib/custom-hooks/intlayer-hook";
 import { Toaster } from "@/components/ui/sonner";
-
+import Script from "next/script";
 const rubik = Rubik({
   subsets: ["arabic", "latin"], // Essential for bilingual support       // Choose the weights you need
   display: "swap",
@@ -78,8 +78,12 @@ const LocaleLayout: NextLayoutIntlayer = async ({ children, params }) => {
               {children}
             </IntlayerClientProvider>
           </IntlayerServerProvider>
-          <Toaster  position={locale === "en" ? "bottom-right" : "bottom-left"} richColors/>
+          <Toaster
+            position={locale === "en" ? "bottom-right" : "bottom-left"}
+            richColors
+          />
         </ThemeProvider>
+        <Script src="https://secure.gosell.io/js/sdk/tap.min.js" />
       </body>
     </html>
   );

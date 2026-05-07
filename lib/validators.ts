@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "@prisma/client";
@@ -13,6 +14,10 @@ const currency = z
     message: "Price must have exactly 2 decimal places ",
   })
   .transform((val) => new Prisma.Decimal(val));
+const currencyResponse = z.preprocess((val) => String(val), z.string());
+const dataResponse = z
+  .union([z.date(), z.string()])
+  .transform((val) => (val instanceof Date ? val.toISOString() : val));
 
 export const insertProductSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -69,9 +74,7 @@ export const ProductResponseSchema = z.object({
   price: z.preprocess((val) => String(val), z.string()),
   rating: z.preprocess((val) => String(val), z.string()),
   numReviews: z.number(),
-  createdAt: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val)),
+  createdAt: dataResponse,
 });
 // zod schema for sign-in form
 export const signInFormSchema = z.object({
@@ -80,8 +83,8 @@ export const signInFormSchema = z.object({
 });
 
 // zod schema for sign-up form in a function to get the translated error messages
-export const createSignUpSchema = async (locale: string) => {
-  const { signUpValidation } = await getPageContent("page", locale);
+export const createSignUpSchema = async (locale?: string) => {
+  const { signUpValidation } = await getPageContent("page", locale ?? 'en');
   return z
     .object({
       name: z.string().min(3, signUpValidation.name.value),
@@ -120,11 +123,7 @@ export const cartItemSchema = z.object({
   qty: z.number().int().nonnegative("Quantity must be positive number"),
   image: z.string().min(1, "Product is required"),
   price: z
-    .union([
-      z.instanceof(Prisma.Decimal),
-      z.string(),
-      z.number(), 
-    ])
+    .union([z.instanceof(Prisma.Decimal), z.string(), z.number()])
     .refine((val) => priceRegex.test(formatNumberWithDecimal(val.toString())), {
       message: "Price must have exactly 2 decimal places ",
     })
@@ -148,19 +147,22 @@ export const insertCartSchema = z.object({
 export const CartResponseSchema = z.object({
   id: z.string(),
   items: z.array(cartItemSchema),
-  itemsPrice: z.preprocess((val) => String(val), z.string()),
-  totalPrice: z.preprocess((val) => String(val), z.string()),
-  shippingPrice: z.preprocess((val) => String(val), z.string()),
-  taxPrice: z.preprocess((val) => String(val), z.string()),
+  itemsPrice: currencyResponse,
+  totalPrice: currencyResponse,
+  shippingPrice: currencyResponse,
+  taxPrice: currencyResponse,
   sessionCartId: z.string().min(1, "Session card id is required"),
   userId: z.string().optional().nullable(), // this will be null for guest users
 });
 
-export const createShippingAddressSchema = (locale: string) => {
-  const translatedMessage =
-    locale === "en"
-      ? " must be at least 3 characters"
-      : " يجب أن يتكون من 3 أحرف على الأقل";
+export const createShippingAddressSchema = (locale?: string) => {
+  let translatedMessage = "must be at least 3 characters";
+  if (locale) {
+    translatedMessage =
+      locale === "en"
+        ? " must be at least 3 characters"
+        : " يجب أن يتكون من 3 أحرف على الأقل";
+  }
 
   return z.object({
     fullName: z.string().min(3, {
@@ -195,9 +197,15 @@ export const createPaymentMethodSchema = (locale: string) => {
 
 //schema for inserting order
 
-export const createInsertOrderSchema = (locale: string) => {
-  const translatedMessage =
-    locale === "en" ? " Payment method is required " : "طريقة الدفع مطلوبة";
+export const createInsertOrderSchema = (locale?: string) => {
+  let translatedMessage = "Payment method is required ";
+  if (locale) {
+    translatedMessage =
+      locale === "en"
+        ? " Payment method is required"
+        : "طريقة الدفع مطلوبة";
+  }
+
 
   return z.object({
     userId: z.string().min(1, ""),
@@ -206,15 +214,18 @@ export const createInsertOrderSchema = (locale: string) => {
     taxPrice: currency,
     totalPrice: currency,
     paymentMethod: z.string().refine((data) => PAYMENT_METHODS.includes(data), {
-      message: "",
+      message: translatedMessage,
     }),
     shippingAddress: createShippingAddressSchema(locale),
   });
 };
 // schema for inserting an order item
-export const createInsertOrderItemSchema = (locale: string) => {
-  const translatedMessage =
-    locale === "en" ? " Payment method is required " : "طريقة الدفع مطلوبة";
+export const createInsertOrderItemSchema = (locale?: string) => {
+  let translatedMessage = "Payment method is required ";
+  if (locale) {
+    translatedMessage =
+      locale === "en" ? " Payment method is required" : "طريقة الدفع مطلوبة";
+  }
 
   return z.object({
     productId: z.string(),
@@ -226,3 +237,23 @@ export const createInsertOrderItemSchema = (locale: string) => {
     qty: z.number(),
   });
 };
+
+
+export const orderResponseSchema = createInsertOrderSchema().extend({
+  id: z.string(),
+  itemsPrice: currencyResponse,
+  shippingPrice: currencyResponse,
+  taxPrice: currencyResponse,
+  totalPrice: currencyResponse,
+  paymentResult: z.unknown().nullable(),
+  isPaid: z.boolean(),
+  isDelivered: z.boolean(),
+  paidAt: dataResponse.nullable(),
+  deliveredAt: dataResponse.nullable(),
+  createdAt:dataResponse,
+  orderItems:z.array(createInsertOrderItemSchema().extend({price:currencyResponse})),
+  user:z.object({
+    name:z.string(),
+    email:z.string()
+  }),
+});

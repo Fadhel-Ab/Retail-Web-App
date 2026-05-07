@@ -8,6 +8,7 @@ import {
   createPaymentMethodSchema,
   createInsertOrderItemSchema,
   createInsertOrderSchema,
+  orderResponseSchema,
 } from "@/lib/validators";
 
 import z from "zod";
@@ -31,3 +32,4 @@ export type Order = z.infer<ReturnType<typeof createInsertOrderSchema>> & {
   orderItems: OrderItem[];
   user: { name: string; email: string };
 };
+export type OrderResponse=z.infer<typeof orderResponseSchema>

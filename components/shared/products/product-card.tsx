@@ -42,6 +42,18 @@ const ProductCard = async ({
             <div className="p text-destructive">{available.card}</div>
           )}
         </div>
+        <Button
+              className={"w-full cursor-pointer"}
+              type="button"
+              onClick={handleAddToCart}
+            >
+              {isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <PlusIcon className="h-4 w-5" />
+              )}
+              {locale === "en" ? "Add to Cart" : "أضف إلى السلة"}
+            </Button>
       </CardContent>
     </Card>
   );
