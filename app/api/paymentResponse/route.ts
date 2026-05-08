@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 // Called by your polling on the verify page
 export async function GET(req: NextRequest) {
   try {
+    // we can also use ?tap_id=
     const orderId = req.nextUrl.searchParams.get("orderId");
 
     const order = await prisma.order.findUnique({

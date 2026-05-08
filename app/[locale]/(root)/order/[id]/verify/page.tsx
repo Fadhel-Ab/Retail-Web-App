@@ -10,6 +10,6 @@ export default async function PaymentPage({
 }) {
   const { tap_id } = await searchParams;
   const { id } = await params;
-
+  console.log("testing testing" + tap_id);
   return <PaymentStatus tapId={tap_id} orderId={id} />;
 }
