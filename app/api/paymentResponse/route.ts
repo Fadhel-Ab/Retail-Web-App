@@ -4,15 +4,20 @@ import prisma from "@/lib/prisma";
 // Called by your polling on the verify page
 export async function GET(req: NextRequest) {
   try {
-    // we can also use ?tap_id=
+    // we can also use ?tap_id= which is their charge id from tap documents
     const orderId = req.nextUrl.searchParams.get("orderId");
 
     const order = await prisma.order.findUnique({
       where: { id: orderId! },
-      select: { isPaid: true },
+      select: { isPaid: true,
+        paymentResult:true,
+       },
     });
+    if(!order) throw new Error('No order was found')
 
-    return NextResponse.json({ isPaid: order?.isPaid ?? false });
+    const paymentJson=order.paymentResult;
+    const paymentRes = JSON.parse(paymentJson as string) ;
+    return NextResponse.json({ status: paymentRes.status });
   } catch (error) {
     return NextResponse.json(
       { error: "Something went wrong" },
@@ -45,6 +50,25 @@ export async function POST(req: NextRequest) {
       });
       console.log(`Payment confirmed for Order: ${orderId}`);
     }
+    if (status === "DECLINED" || status === "NOT CAPTURED") {
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          paymentResult: {
+            id: body.id,
+            status: body.status,
+            email_address: body.customer.email,
+            phone: body.customer.phone.number,
+          },
+        },
+      });
+      console.log(
+        status === "DECLINED"
+          ? `Payment declined for Order: ${orderId}`
+          : `Payment was not successful for Order: ${orderId}`,
+      );
+    }
+
 
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (error) {

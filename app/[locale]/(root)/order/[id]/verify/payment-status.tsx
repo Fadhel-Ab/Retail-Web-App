@@ -1,24 +1,55 @@
 "use client";
 
+import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { use } from "react";
-export default function PaymentPage({ orderId, tapId }: { orderId: string; tapId: string }) {
-  const [status, setStatus] = useState("pending");
+export default function PaymentPage({
+  orderId,
+  tapId,
+}: {
+  orderId: string;
+  tapId: string;
+}) {
+  const [status, setStatus] = useState("pending...");
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const res = await fetch(`/api/paymentResponse?orderId=${orderId}`);
-      const data = await res.json();
+    let timer = 0;
 
-      if (data.isPaid) {
-        setStatus("paid");
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/paymentResponse?orderId=${orderId}`);
+        const data = await res.json();
+        timer++;
+
+        if (
+          data.status === "SUCCESS" ||
+          data.status === "DECLINED" ||
+          data.status === "NOT CAPTURED"
+        ) {
+          setStatus(data.status);
+          clearInterval(interval);
+        } else if (timer >= 5) {
+          setStatus("Timed Out");
+          clearInterval(interval);
+        } else {
+          setStatus("Pending...");
+        }
+      } catch (err) {
         clearInterval(interval);
       }
-    }, 2000); // check every 2 seconds
+    }, 2000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(interval); // Clean up on unmount
+  }, [orderId]); // Restart if orderId changes
 
-  if (status === "pending") return <p>Confirming your payment...</p>;
-  if (status === "paid") return <h1>Payment Successful! 🎉</h1>;
+  if (status === "Pending..." || "")
+    return (
+      <p>
+        <Loader className="animate-spin"></Loader>Confirming your payment...
+      </p>
+    );
+  if (status === "CAPTURED") return <h1>Payment Successful! 🎉</h1>;
+  if (status === "DECLINED") return <h1>Payment was Declined </h1>;
+  if (status === "NOT CAPTURED") return <h1>Payment was Not Successful! </h1>;
+  if (status === "Timed Out") return <h1>Timed Out </h1>;
 }
