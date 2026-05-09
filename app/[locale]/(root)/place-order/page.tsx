@@ -54,7 +54,7 @@ const PlaceOrderPage = async ({
   return (
     <>
       <CheckOutSteps current={3} />
-      <h1 className="pb-3 text-2xl">Place Order</h1>
+      <h1 className="pb-3 text-2xl">{locale === "en" ? "Place Order" : "تأكيد الطلب"}</h1>
       <div className="grid md:grid-cols-3 md:gap-5">
         <div className="md:col-span-2  space-y-4">
           <Card>

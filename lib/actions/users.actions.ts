@@ -123,7 +123,7 @@ export async function updateUserAddress(data: ShippingAddress) {
     return {
       success: true,
       message:
-        locale === "en" ? "User update successfully" : "تم تحديث المستخد بنجاح",
+        locale === "en" ? "User updated successfully" : "تم تحديث المستخدم بنجاح",
     };
   } catch (error) {
     return {
@@ -154,7 +154,7 @@ export async function updateUserPaymentMethod(
     });
     return {
       success: true,
-      message: "User updated successfully",
+      message: locale === "en" ? "User updated successfully" : "تم تحديث المستخدم بنجاح",
     };
   } catch (error) {
     return {

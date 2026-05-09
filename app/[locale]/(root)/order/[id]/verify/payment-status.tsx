@@ -6,9 +6,11 @@ import { use } from "react";
 export default function PaymentPage({
   orderId,
   tapId,
+  locale,
 }: {
   orderId: string;
   tapId: string;
+  locale: string;
 }) {
   const [status, setStatus] = useState("pending...");
 
@@ -48,11 +50,32 @@ export default function PaymentPage({
   if (status === "Pending..." || "")
     return (
       <p>
-        <Loader className="animate-spin"></Loader>Confirming your payment...
+        <Loader className="animate-spin"></Loader>
+        {locale === "en" ? "Confirming your payment..." : "تأكيد الدفع..."}
       </p>
     );
-  if (status === "CAPTURED") return <h1>Payment Successful! 🎉</h1>;
-  if (status === "DECLINED") return <h1>Payment was Declined </h1>;
-  if (status === "NOT CAPTURED") return <h1>Payment was Not Successful! </h1>;
-  if (status === "Timed Out") return <h1>Timed Out </h1>;
+  if (status === "CAPTURED")
+    return (
+      <h1>
+        {locale === "en" ? "Payment Successful! 🎉" : "تم الدفع بنجاح! 🎉"}
+      </h1>
+    );
+  if (status === "DECLINED")
+    return <h1>{locale === "en" ? "Payment was Declined" : "تم رفض الدفع"}</h1>;
+  if (status === "NOT CAPTURED")
+    return (
+      <h1>
+        {locale === "en"
+          ? "Payment was Not Successful!"
+          : "لم تتم عملية الدفع بنجاح!"}
+      </h1>
+    );
+  if (status === "Timed Out")
+    return (
+      <h1>
+        {locale === "en"
+          ? "Payment was Not Successful!"
+          : "لم تتم عملية الدفع بنجاح!"}
+      </h1>
+    );
 }
