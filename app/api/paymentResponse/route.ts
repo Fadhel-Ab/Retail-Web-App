@@ -6,18 +6,30 @@ export async function GET(req: NextRequest) {
   try {
     // we can also use ?tap_id= which is their charge id from tap documents
     const orderId = req.nextUrl.searchParams.get("orderId");
-
+    if (!orderId) {
+      return NextResponse.json({ error: "Order ID required" }, { status: 400 });
+    }
     const order = await prisma.order.findUnique({
-      where: { id: orderId! },
-      select: { isPaid: true,
-        paymentResult:true,
-       },
+      where: { id: orderId },
+      select: { isPaid: true, paymentResult: true },
     });
-    if(!order) throw new Error('No order was found')
+    if (!order) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+    if (!order.paymentResult) {
+      return NextResponse.json({ status: "WAITING_FOR_WEBHOOK" });
+    }
 
-    const paymentJson=order.paymentResult;
-    const paymentRes = JSON.parse(paymentJson as string) ;
-    return NextResponse.json({ status: paymentRes.status });
+    try {
+      const paymentRes =
+        typeof order.paymentResult === "string"
+          ? JSON.parse(order.paymentResult)
+          : order.paymentResult;
+
+      return NextResponse.json({ status: paymentRes.status });
+    } catch (parseError) {
+      return NextResponse.json({ status: "PROCESSING_ERROR" });
+    }
   } catch (error) {
     return NextResponse.json(
       { error: "Something went wrong" },
@@ -68,7 +80,6 @@ export async function POST(req: NextRequest) {
           : `Payment was not successful for Order: ${orderId}`,
       );
     }
-
 
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (error) {

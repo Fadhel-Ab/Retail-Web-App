@@ -28,7 +28,7 @@ export default function PaymentPage({
         ) {
           setStatus(data.status);
           clearInterval(interval);
-        } else if (timer >= 5) {
+        } else if (timer >= 9) {
           setStatus("Timed Out");
           clearInterval(interval);
         } else {
