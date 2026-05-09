@@ -22,13 +22,13 @@ export default function PaymentPage({
         timer++;
 
         if (
-          data.status === "SUCCESS" ||
+          data.status === "CAPTURED" ||
           data.status === "DECLINED" ||
           data.status === "NOT CAPTURED"
         ) {
           setStatus(data.status);
           clearInterval(interval);
-          console.log(data.status)
+          console.log(data.status);
         } else if (timer >= 9) {
           console.log(data.status);
           setStatus("Timed Out");
