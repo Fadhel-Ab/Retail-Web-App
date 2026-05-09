@@ -21,12 +21,10 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-      const paymentRes =
-        typeof order.paymentResult === "string"
-          ? JSON.parse(order.paymentResult)
-          : order.paymentResult;
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       const paymentData = order.paymentResult as any;
 
-      return NextResponse.json({ status: paymentRes.status });
+      return NextResponse.json({ status: paymentData.status });
     } catch (parseError) {
       return NextResponse.json({ status: "PROCESSING_ERROR" });
     }
