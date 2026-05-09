@@ -28,10 +28,13 @@ export default function PaymentPage({
         ) {
           setStatus(data.status);
           clearInterval(interval);
+          console.log(data.status)
         } else if (timer >= 9) {
+          console.log(data.status);
           setStatus("Timed Out");
           clearInterval(interval);
         } else {
+          console.log(data.status);
           setStatus("Pending...");
         }
       } catch (err) {

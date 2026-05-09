@@ -19,16 +19,18 @@ export async function GET(req: NextRequest) {
     if (!order.paymentResult) {
       return NextResponse.json({ status: "WAITING_FOR_WEBHOOK" });
     }
+    console.log(order.paymentResult);
 
     try {
-       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-       const paymentData = order.paymentResult as any;
-
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const paymentData = order.paymentResult as any;
+      console.log(order.paymentResult);
       return NextResponse.json({ status: paymentData.status });
     } catch (parseError) {
       return NextResponse.json({ status: "PROCESSING_ERROR" });
     }
   } catch (error) {
+    
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 },
