@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { calculateHashForPayment } from "@/lib/actions/payment.action";
-
+export const dynamic = "force-dynamic";
 // Called by your polling on the verify page
 export async function GET(req: NextRequest) {
   try {
@@ -49,6 +49,9 @@ export async function POST(req: NextRequest) {
     const orderId = body.reference?.order;
     const myHash = await calculateHashForPayment(orderId, amount, currency);
     const incomingHash = req.headers.get("hashstring");
+    console.log("hashstring from header:", incomingHash);
+    console.log("my hash:", myHash);
+
     if (!incomingHash) {
       return NextResponse.json(
         { error: "Missing hashstring" },
