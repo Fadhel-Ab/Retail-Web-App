@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { calculateHashForPayment } from "@/lib/actions/payment.action";
 
 // Called by your polling on the verify page
 export async function GET(req: NextRequest) {
@@ -44,42 +45,50 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const status = body.status;
+    const amount=body.amount;
+    const currency=body.currency;
     const orderId = body.reference?.order;
+    const myHash= await calculateHashForPayment(orderId,amount,currency);
+    
+    console.log(body);
 
-    if (status === "CAPTURED") {
-      await prisma.order.update({
-        where: { id: orderId },
-        data: {
-          isPaid: true,
-          paidAt: new Date(Number(body.transaction.created)),
-          paymentResult: {
-            id: body.id,
-            status: body.status,
-            email_address: body.customer.email,
-            phone: body.customer.phone.number,
+    if (myHash===body.hashstring) {
+      if (status === "CAPTURED") {
+        await prisma.order.update({
+          where: { id: orderId },
+          data: {
+            isPaid: true,
+            paidAt: new Date(Number(body.transaction.created)),
+            paymentResult: {
+              id: body.id,
+              status: body.status,
+              email_address: body.customer.email,
+              phone: body.customer.phone.number,
+            },
           },
-        },
-      });
-      console.log(`Payment confirmed for Order: ${orderId}`);
-    }
-    if (status === "DECLINED" || status === "NOT CAPTURED") {
-      await prisma.order.update({
-        where: { id: orderId },
-        data: {
-          paymentResult: {
-            id: body.id,
-            status: body.status,
-            email_address: body.customer.email,
-            phone: body.customer.phone.number,
+        });
+        console.log(`Payment confirmed for Order: ${orderId}`);
+      }
+      if (status === "DECLINED" || status === "NOT CAPTURED") {
+        await prisma.order.update({
+          where: { id: orderId },
+          data: {
+            paymentResult: {
+              id: body.id,
+              status: body.status,
+              email_address: body.customer.email,
+              phone: body.customer.phone.number,
+            },
           },
-        },
-      });
-      console.log(
-        status === "DECLINED"
-          ? `Payment declined for Order: ${orderId}`
-          : `Payment was not successful for Order: ${orderId}`,
-      );
+        });
+        console.log(
+          status === "DECLINED"
+            ? `Payment declined for Order: ${orderId}`
+            : `Payment was not successful for Order: ${orderId}`,
+        );
+      }
     }
+    
 
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (error) {

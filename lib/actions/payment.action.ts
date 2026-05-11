@@ -2,6 +2,7 @@
 import prisma from "@/lib/prisma";
 import { getLocale } from "next-intlayer/server";
 import { auth } from "@/auth";
+import { createHmac } from "node:crypto";
 
 export async function createPaymentCharge(orderId: string) {
   const locale = await getLocale();
@@ -49,7 +50,7 @@ export async function createPaymentCharge(orderId: string) {
         url: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}${locale}/order/${orderId}/verify`,
       },
       post: {
-        url: `${process.env.TAP_WEBHOOK_URL}api/paymentResponse`,
+        url: `${process.env.TAP_WEBHOOK_URL}`,
       },
     }),
   });
@@ -107,4 +108,21 @@ export async function verifyPayment(orderId: string, tapId: string) {
   } catch (error) {
     return { success: false, message: "Verification failed" };
   }
+}
+
+export async function calculateHashForPayment(
+  orderId: string,
+  amount: number,
+  currency: string,
+) {
+  const secretKey = process.env.TAP_SECRET_KEY || "";
+  const publicKey = process.env.PUBLIC_KEY || "";
+
+  const toBeHashed = `${publicKey}${amount}${currency}${orderId}${secretKey}`;
+  const myHashString = createHmac("sha256", secretKey)
+    .update(toBeHashed)
+    .digest("hex");
+
+  console.log("Generated Hash:", myHashString);
+  return myHashString;
 }
