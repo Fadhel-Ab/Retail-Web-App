@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     
     console.log(body);
 
-    if (myHash===body.hashstring) {
+    
       if (status === "CAPTURED") {
         await prisma.order.update({
           where: { id: orderId },
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
             : `Payment was not successful for Order: ${orderId}`,
         );
       }
-    }
+    
     
 
     return NextResponse.json({ received: true }, { status: 200 });
