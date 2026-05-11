@@ -28,6 +28,7 @@ export async function createPaymentCharge(orderId: string) {
       currency: "BHD",
       reference: {
         order: orderId,
+        transaction: orderId,
       },
       customer_initiated: true,
       threeDSecure: true,
