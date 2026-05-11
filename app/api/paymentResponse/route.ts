@@ -80,12 +80,7 @@ export async function POST(req: NextRequest) {
         await prisma.order.update({
           where: { id: orderId },
           data: {
-            paymentResult: {
-              id: body.id,
-              status: body.status,
-              email_address: body.customer.email,
-              phone: body.customer.phone.number,
-            },
+            paymentResult: body,
           },
         });
         console.log(

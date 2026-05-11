@@ -117,8 +117,9 @@ export async function calculateHashForPayment(
 ) {
   const secretKey = process.env.TAP_SECRET_KEY || "";
   const publicKey = process.env.PUBLIC_KEY || "";
+  const postUrl=process.env.TAP_WEBHOOK_URL || '';
 
-  const toBeHashed = `${publicKey}${amount}${currency}${orderId}${secretKey}`;
+  const toBeHashed = `x_publickey${publicKey}x_amount${amount}x_currency${currency}x_transaction${orderId}x_post${postUrl}`;
   const myHashString = createHmac("sha256", secretKey)
     .update(toBeHashed)
     .digest("hex");
