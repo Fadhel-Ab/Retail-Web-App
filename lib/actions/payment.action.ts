@@ -110,21 +110,38 @@ export async function verifyPayment(orderId: string, tapId: string) {
     return { success: false, message: "Verification failed" };
   }
 }
-
-export async function calculateHashForPayment(
-  orderId: string,
-  amount: number,
-  currency: string,
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function validateWebhookHash(body: any, receivedHash: string) {
   const secretKey = process.env.TAP_SECRET_KEY || "";
-  const publicKey = process.env.PUBLIC_KEY || "";
-  const postUrl=process.env.TAP_WEBHOOK_URL || '';
 
-  const toBeHashed = `x_publickey${publicKey}x_amount${amount}x_currency${currency}x_transaction${orderId}x_post${postUrl}`;
-  const myHashString = createHmac("sha256", secretKey)
+  
+  const id = body.id; 
+  const amount = body.amount?.toFixed(3); 
+  const currency = body.currency;
+  const gateway_reference = body.reference?.gateway ?? "";
+  const payment_reference = body.reference?.payment ?? "";
+  const status = body.status;
+  const created = body.transaction?.created;
+
+ 
+  const toBeHashed =
+    `x_id${id}` +
+    `x_amount${amount}` +
+    `x_currency${currency}` +
+    `x_gateway_reference${gateway_reference}` +
+    `x_payment_reference${payment_reference}` +
+    `x_status${status}` +
+    `x_created${created}`;
+
+  console.log("String to hash:", toBeHashed);
+
+  const calculatedHash = createHmac("sha256", secretKey)
     .update(toBeHashed)
     .digest("hex");
 
-  console.log("Generated Hash:", myHashString);
-  return myHashString;
+  console.log("Calculated hash:", calculatedHash);
+  console.log("Received hash:", receivedHash);
+  console.log("Match:", calculatedHash === receivedHash);
+
+  return calculatedHash === receivedHash;
 }

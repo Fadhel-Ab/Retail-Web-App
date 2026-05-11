@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { calculateHashForPayment } from "@/lib/actions/payment.action";
+import { validateWebhookHash } from "@/lib/actions/payment.action";
 export const dynamic = "force-dynamic";
 // Called by your polling on the verify page
 export async function GET(req: NextRequest) {
@@ -47,10 +47,10 @@ export async function POST(req: NextRequest) {
     const amount = body.amount;
     const currency = body.currency;
     const orderId = body.reference?.order;
-    const myHash = await calculateHashForPayment(orderId, amount, currency);
+    const isValid = await validateWebhookHash(body, req.headers.get("hashstring") || "");
     const incomingHash = req.headers.get("hashstring");
     console.log("hashstring from header:", incomingHash);
-    console.log("my hash:", myHash);
+    
 
     if (!incomingHash) {
       return NextResponse.json(
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (myHash === incomingHash) {
+    if (isValid) {
       if (status === "CAPTURED") {
         await prisma.order.update({
           where: { id: orderId },
