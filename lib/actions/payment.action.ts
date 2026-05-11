@@ -48,7 +48,7 @@ export async function createPaymentCharge(orderId: string) {
       source: { id: "src_bh.benefit" },
 
       redirect: {
-        url: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}${locale}/order/${orderId}/verify`,
+        url: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}${locale}/order/${orderId}`,
       },
       post: {
         url: `${process.env.TAP_WEBHOOK_URL}`,
@@ -114,16 +114,14 @@ export async function verifyPayment(orderId: string, tapId: string) {
 export async function validateWebhookHash(body: any, receivedHash: string) {
   const secretKey = process.env.TAP_SECRET_KEY || "";
 
-  
-  const id = body.id; 
-  const amount = body.amount?.toFixed(3); 
+  const id = body.id;
+  const amount = body.amount?.toFixed(3);
   const currency = body.currency;
   const gateway_reference = body.reference?.gateway ?? "";
   const payment_reference = body.reference?.payment ?? "";
   const status = body.status;
   const created = body.transaction?.created;
 
- 
   const toBeHashed =
     `x_id${id}` +
     `x_amount${amount}` +

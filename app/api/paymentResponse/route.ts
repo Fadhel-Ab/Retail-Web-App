@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { validateWebhookHash } from "@/lib/actions/payment.action";
+import { getLocale } from "next-intlayer/server";
+import { revalidatePath } from "next/cache";
 export const dynamic = "force-dynamic";
 // Called by your polling on the verify page
 export async function GET(req: NextRequest) {
@@ -40,17 +42,23 @@ export async function GET(req: NextRequest) {
 
 // Called by Tap webhook
 export async function POST(req: NextRequest) {
+  const locale=getLocale();
   try {
     const body = await req.json();
 
     const status = body.status;
-    const amount = body.amount;
-    const currency = body.currency;
     const orderId = body.reference?.order;
     const isValid = await validateWebhookHash(body, req.headers.get("hashstring") || "");
     const incomingHash = req.headers.get("hashstring");
     console.log("hashstring from header:", incomingHash);
-    
+    const createdTime = parseInt(body.transaction?.created); //"1662544525491"
+    const currentTime = Date.now();
+    const FIVE_MINUTES_MS = 5 * 60 * 1000;
+
+    // Check if the timestamp is older than 5 minutes
+    if (currentTime - createdTime > FIVE_MINUTES_MS) {
+      return NextResponse.json({ error: "Request expired" }, { status: 403 });
+    }
 
     if (!incomingHash) {
       return NextResponse.json(
@@ -89,6 +97,7 @@ export async function POST(req: NextRequest) {
             : `Payment was not successful for Order: ${orderId}`,
         );
       }
+      revalidatePath(`/${locale}/order/${orderId}`);
       return NextResponse.json({ received: true }, { status: 200 });
     } else {
       return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
