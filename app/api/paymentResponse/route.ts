@@ -48,40 +48,53 @@ export async function POST(req: NextRequest) {
     const currency = body.currency;
     const orderId = body.reference?.order;
     const myHash = await calculateHashForPayment(orderId, amount, currency);
-
-    console.log(body);
-
-    if (status === "CAPTURED") {
-      await prisma.order.update({
-        where: { id: orderId },
-        data: {
-          isPaid: true,
-          paidAt: new Date(Number(body.transaction.created)),
-          paymentResult: body,
-        },
-      });
-      console.log(`Payment confirmed for Order: ${orderId}`);
-    }
-    if (status === "DECLINED" || status === "NOT CAPTURED") {
-      await prisma.order.update({
-        where: { id: orderId },
-        data: {
-          paymentResult: {
-            id: body.id,
-            status: body.status,
-            email_address: body.customer.email,
-            phone: body.customer.phone.number,
-          },
-        },
-      });
-      console.log(
-        status === "DECLINED"
-          ? `Payment declined for Order: ${orderId}`
-          : `Payment was not successful for Order: ${orderId}`,
+    const incomingHash = req.headers.get("hashstring");
+    if (!incomingHash) {
+      return NextResponse.json(
+        { error: "Missing hashstring" },
+        { status: 400 },
       );
     }
 
-    return NextResponse.json({ received: true }, { status: 200 });
+    if (myHash === incomingHash) {
+      if (status === "CAPTURED") {
+        await prisma.order.update({
+          where: { id: orderId },
+          data: {
+            isPaid: true,
+            paidAt: new Date(Number(body.transaction.created)),
+            paymentResult: {
+              id: body.id,
+              status: body.status,
+              email_address: body.customer.email,
+              phone: body.customer.phone.number,
+            },
+          },
+        });
+        console.log(`Payment confirmed for Order: ${orderId}`);
+      }
+      if (status === "DECLINED" || status === "NOT CAPTURED") {
+        await prisma.order.update({
+          where: { id: orderId },
+          data: {
+            paymentResult: {
+              id: body.id,
+              status: body.status,
+              email_address: body.customer.email,
+              phone: body.customer.phone.number,
+            },
+          },
+        });
+        console.log(
+          status === "DECLINED"
+            ? `Payment declined for Order: ${orderId}`
+            : `Payment was not successful for Order: ${orderId}`,
+        );
+      }
+      return NextResponse.json({ received: true }, { status: 200 });
+    } else {
+      return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
+    }
   } catch (error) {
     console.error("Webhook error:", error);
     return NextResponse.json(
