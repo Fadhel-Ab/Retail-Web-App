@@ -11,6 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 const UserButton = async ({ locale }: { locale: string }) => {
   const session = await auth();
@@ -51,6 +52,16 @@ const UserButton = async ({ locale }: { locale: string }) => {
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuItem className={'mt-3'}>
+              <Link href={`/${locale}/user/profile`} className="w-full">
+                {locale === "en" ? "Profile" : "الملف الشخصي"}
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/${locale}/user/orders`} className="w-full">
+                {locale === "en" ? "Order History" : "سجل الطلبات"}
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem className={"p-0 mb-1 "}>
               <form action={signOutUser} className="flex my-2 w-full">
                 <Button

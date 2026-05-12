@@ -2,6 +2,7 @@
 import { APP_NAME } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { locale } from "react-intlayer/server";
 
 const NotFoundPage = () => {
   return (
@@ -20,7 +21,7 @@ const NotFoundPage = () => {
           variant={"outline"}
           className={"mt-4 ms-2"}
           onClick={() => {
-            window.location.href = "/";
+            window.location.href = `/${locale}`;
           }}
         >
           Back To Home

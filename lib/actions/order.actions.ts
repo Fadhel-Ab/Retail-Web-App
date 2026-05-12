@@ -1,6 +1,6 @@
 "use server";
 
-import { success } from "zod";
+import z, { date, success } from "zod";
 import { formatError } from "../server-side-utils";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { auth } from "@/auth";
@@ -9,9 +9,10 @@ import prisma from "../prisma";
 import { getUserById } from "./users.actions";
 import { get } from "http";
 import { getLocale } from "next-intlayer/server";
-import { createInsertOrderSchema, orderResponseSchema } from "../validators";
+import { createInsertOrderSchema, orderResponseSchema, ordersArraySchema } from "../validators";
 import { CartItem } from "@/types";
 import { toPlainObject } from "../utils";
+import { PAGE_SIZE } from "../constants";
 
 //create order and create the order item
 export async function createOrder() {
@@ -60,6 +61,7 @@ export async function createOrder() {
     });
 
     // create the transaction to create order and the order item in database
+    // tweaks needed: move the $transaction to the api/webhook later
     const insertedOrderId = await prisma.$transaction(async (tx) => {
       // create order
       const insertedOrder = await tx.order.create({ data: order });
@@ -117,19 +119,49 @@ export async function createOrder() {
   }
 }
 
-// get order by id 
-export async function getOrderById(orderId:string) {
-  const data=await prisma.order.findFirst({
-    where:{id:orderId},
-    include:{
-      orderItems:true,
-      user:{
+// get order by id
+export async function getOrderById(orderId: string) {
+  const data = await prisma.order.findFirst({
+    where: { id: orderId },
+    include: {
+      orderItems: true,
+      user: {
         select: {
-          name:true,
-          email:true,
-        }
-      }
-    }
+          name: true,
+          email: true,
+        },
+      },
+    },
   });
   return orderResponseSchema.parse(data);
+}
+
+export async function getMyOrders({
+  limit = PAGE_SIZE,
+  page,
+}: {
+  limit?: number;
+  page: number;
+}) {
+  const session = await auth();
+  if (!session) throw new Error("User is not Authorized ");
+  const userId = session?.user?.id;
+  if (!userId) throw new Error("User is not found ");
+  const rawData = await prisma.order.findMany({
+    where: { userId: userId },
+    orderBy:{createdAt:"desc"},
+    take:limit,
+    skip:(page -1) * limit
+  });
+  
+const data=z.array(ordersArraySchema).parse(rawData);
+
+  const dataCount =await prisma.order.count({
+    where: { userId: userId },
+  });
+
+  return {
+    data,
+    totalPages: Math.ceil(dataCount / limit) // total number of orders divided by the number of orders i want to display on each page
+  }
 }

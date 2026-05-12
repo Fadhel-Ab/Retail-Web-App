@@ -9,6 +9,7 @@ import {
   createInsertOrderItemSchema,
   createInsertOrderSchema,
   orderResponseSchema,
+  ordersArraySchema,
 } from "@/lib/validators";
 
 import z from "zod";
@@ -33,3 +34,4 @@ export type Order = z.infer<ReturnType<typeof createInsertOrderSchema>> & {
   user: { name: string; email: string };
 };
 export type OrderResponse=z.infer<typeof orderResponseSchema>
+export type OrderResponseNoRelation=z.infer<typeof ordersArraySchema>

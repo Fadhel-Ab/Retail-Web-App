@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "@prisma/client";
@@ -84,7 +83,7 @@ export const signInFormSchema = z.object({
 
 // zod schema for sign-up form in a function to get the translated error messages
 export const createSignUpSchema = async (locale?: string) => {
-  const { signUpValidation } = await getPageContent("page", locale ?? 'en');
+  const { signUpValidation } = await getPageContent("page", locale ?? "en");
   return z
     .object({
       name: z.string().min(3, signUpValidation.name.value),
@@ -201,11 +200,8 @@ export const createInsertOrderSchema = (locale?: string) => {
   let translatedMessage = "Payment method is required ";
   if (locale) {
     translatedMessage =
-      locale === "en"
-        ? " Payment method is required"
-        : "طريقة الدفع مطلوبة";
+      locale === "en" ? " Payment method is required" : "طريقة الدفع مطلوبة";
   }
-
 
   return z.object({
     userId: z.string().min(1, ""),
@@ -238,7 +234,6 @@ export const createInsertOrderItemSchema = (locale?: string) => {
   });
 };
 
-
 export const orderResponseSchema = createInsertOrderSchema().extend({
   id: z.string(),
   itemsPrice: currencyResponse,
@@ -250,10 +245,26 @@ export const orderResponseSchema = createInsertOrderSchema().extend({
   isDelivered: z.boolean(),
   paidAt: dataResponse.nullable(),
   deliveredAt: dataResponse.nullable(),
-  createdAt:dataResponse,
-  orderItems:z.array(createInsertOrderItemSchema().extend({price:currencyResponse})),
-  user:z.object({
-    name:z.string(),
-    email:z.string()
+  createdAt: dataResponse,
+  orderItems: z.array(
+    createInsertOrderItemSchema().extend({ price: currencyResponse }),
+  ),
+  user: z.object({
+    name: z.string(),
+    email: z.string(),
   }),
+});
+
+export const ordersArraySchema = createInsertOrderSchema().extend({
+  id: z.string(),
+  itemsPrice: currencyResponse,
+  shippingPrice: currencyResponse,
+  taxPrice: currencyResponse,
+  totalPrice: currencyResponse,
+  paymentResult: z.unknown().nullable(),
+  isPaid: z.boolean(),
+  isDelivered: z.boolean(),
+  paidAt: dataResponse.nullable(),
+  deliveredAt: dataResponse.nullable(),
+  createdAt: dataResponse,
 });

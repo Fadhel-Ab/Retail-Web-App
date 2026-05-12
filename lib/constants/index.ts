@@ -32,3 +32,6 @@ export const PAYMENT_METHODS = process.env.PAYMENT_METHODS
 
 export const DEFAULT_PAYMENT_METHOD =
   process.env.DEFAULT_PAYMENT_METHOD || "BenefitPay";
+
+  // so just a reminder that everything i take from .env file its a string
+  export const PAGE_SIZE = Number(process.env.PAGE_SIZE) || 2;
