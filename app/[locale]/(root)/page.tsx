@@ -1,6 +1,8 @@
 import ProductList from "@/components/shared/products/product-list";
+import { Button } from "@/components/ui/button";
 import { getLatestProducts } from "@/lib/actions/products.actions";
 import { Metadata } from "next";
+import Link from "next/link";
 
 
 type Props = {
@@ -27,17 +29,43 @@ const Homepage = async ({
   /*console.log(` language: ${locale}`);
   console.log(await getLatestProducts());*/ //testing
   const data = await getLatestProducts();
+ const isAr = locale === "ar";
 
   return (
     <>
-      <ProductList
-        data={data}
-        title="Featured Products"
-        limit={4}
-        locale={locale}
-      />
+      {/* 🚀 THE HERO HEADER (Call to Action) */}
+      <section className="bg-gradient-to-r from-zinc-900 to-zinc-800 text-white py-16 px-6 text-center rounded-2xl my-6 shadow-lg max-w-7xl mx-auto">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+          {isAr
+            ? "اكتشف مجموعتنا الحصرية"
+            : "Discover Our Exclusive Collection"}
+        </h1>
+        <p className="text-zinc-400 text-lg max-w-xl mx-auto mb-8">
+          {isAr
+            ? "منتجات عالية الجودة منتقاة بعناية ومصممة خصيصًا لتلبية احتياجاتك اليومية."
+            : "Handpicked premium products designed specifically to elevate your daily lifestyle."}
+        </p>
+        <Link href={`/${locale}/shop`}>
+          <Button
+            size="lg"
+            className="bg-amber-500 hover:bg-amber-600 text-zinc-900 font-bold px-8 py-6 text-lg rounded-xl transition-all shadow-md"
+          >
+            {isAr ? "ابدأ التسوق الآن ←" : "Start Shopping Now →"}
+          </Button>
+        </Link>
+      </section>
+
+      {/* PRODUCT LIST (Your existing cards) */}
+      <div className="max-w-7xl mx-auto px-4">
+        <ProductList
+          data={data}
+          title={isAr ? "المنتجات المميزة" : "Featured Products"}
+          limit={4}
+          locale={locale}
+        />
+      </div>
     </>
   );
-};
+}
 
 export default Homepage;

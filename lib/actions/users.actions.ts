@@ -5,6 +5,7 @@ import {
   createSignUpSchema,
   createShippingAddressSchema,
   createPaymentMethodSchema,
+  createUpdateProfileSchema,
 } from "../validators";
 import { auth, signIn, signOut } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
@@ -123,7 +124,9 @@ export async function updateUserAddress(data: ShippingAddress) {
     return {
       success: true,
       message:
-        locale === "en" ? "User updated successfully" : "تم تحديث المستخدم بنجاح",
+        locale === "en"
+          ? "User updated successfully"
+          : "تم تحديث المستخدم بنجاح",
     };
   } catch (error) {
     return {
@@ -154,7 +157,43 @@ export async function updateUserPaymentMethod(
     });
     return {
       success: true,
-      message: locale === "en" ? "User updated successfully" : "تم تحديث المستخدم بنجاح",
+      message:
+        locale === "en"
+          ? "User updated successfully"
+          : "تم تحديث المستخدم بنجاح",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+}
+
+//update the user profile
+export async function updateProfile(
+  user: { name: string; email: string },
+  locale: string,
+) {
+  try {
+    const session = await auth();
+    const currentUser = await prisma.user.findFirst({
+      where: { id: session?.user?.id },
+    });
+
+    if (!user) throw new Error("user not found");
+    const updateProfile = createUpdateProfileSchema(locale);
+    const data = updateProfile.parse(user);
+    await prisma.user.update({
+      where: { id: currentUser?.id },
+      data: { name: data.name /*email: user.email */ }, // can later add email if we want to update
+    });
+    return {
+      success: true,
+      message:
+        locale === "en"
+          ? "User updated successfully"
+          : "تم تحديث المستخدم بنجاح",
     };
   } catch (error) {
     return {

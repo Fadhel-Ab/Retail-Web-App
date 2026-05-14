@@ -3,6 +3,7 @@ import { getMyOrders } from "@/lib/actions/order.actions";
 import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
 import Link from "next/link";
 import { SearchParams } from "next/dist/server/request/search-params";
+import Pagination from "@/components/shared/pagination";
 import {
   Table,
   TableBody,
@@ -43,7 +44,7 @@ const OrdersPage = async ({
     <div className="space-y-2">
       <h2 className="h2-bold">{locale === "en" ? "My Orders" : "طلباتي"}</h2>
       <div className="overflow-x-auto">
-        <Table dir={dir}>
+        <Table dir={dir} className="mb-4">
           <TableHeader>
             <TableRow>
               <TableHead className="text-start">
@@ -101,6 +102,7 @@ const OrdersPage = async ({
             ))}
           </TableBody>
         </Table>
+        {orders.totalPages > 1 && (<Pagination page={Number(page) || 1} totalPages={orders?.totalPages}></Pagination>)}
       </div>
     </div>
   );

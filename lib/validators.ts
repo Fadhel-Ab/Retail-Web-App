@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { email, z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { Prisma } from "@prisma/client";
 import { getPageContent } from "./custom-hooks/intlayer-hook";
@@ -268,3 +268,19 @@ export const ordersArraySchema = createInsertOrderSchema().extend({
   deliveredAt: dataResponse.nullable(),
   createdAt: dataResponse,
 });
+
+export const createUpdateProfileSchema = (locale?: string) => {
+   let translatedMessage = "must be at least 3 characters";
+   if (locale) {
+     translatedMessage =
+       locale === "en"
+         ? " must be at least 3 characters"
+         : " يجب أن يتكون من 3 أحرف على الأقل";
+   }
+
+
+  return z.object({
+    name:z.string().min(3,translatedMessage),
+    email:z.email().min(3,translatedMessage),
+  });
+};
