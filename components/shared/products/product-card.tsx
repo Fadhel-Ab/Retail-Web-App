@@ -18,9 +18,9 @@ const ProductCard = async ({
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="w-75 h-75 ">
-        <Link href={`${locale}/product/${product.slug}`}>
+        <Link href={`/${locale}/product/${product.slug}`}>
           <Image
-          className="object-cover"
+            className="object-cover"
             src={product.images[0]}
             alt={translatedName}
             height={300}
@@ -42,7 +42,6 @@ const ProductCard = async ({
             <div className="p text-destructive">{available.card}</div>
           )}
         </div>
-        
       </CardContent>
     </Card>
   );
