@@ -23,9 +23,8 @@ export default async function ShopPage({ params }: ShopPageProps) {
   const data=z.array(ProductResponseSchema).parse(products);
   return (
     <main className="max-w-7xl mx-auto px-4 py-12 min-h-screen">
-      
       <header className="border-b border-zinc-200 pb-6 mb-10">
-        <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 md:text-4xl">
+        <h1 className="text-3xl font-extrabold tracking-tight  text-accent-foreground md:text-4xl">
           {isAr ? "متجرنا الكامل" : "Our Full Shop"}
         </h1>
         <p className="mt-2 text-sm text-zinc-500 md:text-base">
@@ -35,13 +34,11 @@ export default async function ShopPage({ params }: ShopPageProps) {
         </p>
       </header>
 
-     
       {products.length > 0 ? (
         <ProductList
           data={data}
           title={isAr ? "كل المنتجات" : "All Products"}
           locale={locale}
-         
         />
       ) : (
         <div className="text-center py-24 border border-dashed border-zinc-300 rounded-2xl">
