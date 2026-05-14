@@ -4,7 +4,6 @@ import { getLatestProducts } from "@/lib/actions/products.actions";
 import { Metadata } from "next";
 import Link from "next/link";
 
-
 type Props = {
   params: Promise<{ locale: string }>;
 };
@@ -18,7 +17,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-
 const Homepage = async ({
   params,
 }: {
@@ -29,11 +27,10 @@ const Homepage = async ({
   /*console.log(` language: ${locale}`);
   console.log(await getLatestProducts());*/ //testing
   const data = await getLatestProducts();
- const isAr = locale === "ar";
+  const isAr = locale === "ar";
 
   return (
     <>
-      {/* 🚀 THE HERO HEADER (Call to Action) */}
       <section className="bg-gradient-to-r from-zinc-900 to-zinc-800 text-white py-16 px-6 text-center rounded-2xl my-6 shadow-lg max-w-7xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
           {isAr
@@ -54,8 +51,6 @@ const Homepage = async ({
           </Button>
         </Link>
       </section>
-
-      {/* PRODUCT LIST (Your existing cards) */}
       <div className="max-w-7xl mx-auto px-4">
         <ProductList
           data={data}
@@ -66,6 +61,6 @@ const Homepage = async ({
       </div>
     </>
   );
-}
+};
 
 export default Homepage;

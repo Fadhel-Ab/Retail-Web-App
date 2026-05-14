@@ -15,14 +15,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const ProfilePage = async ({params}:{params:Promise<{locale:string}>}) => {
-  const {locale}=await params;
+const ProfilePage = async ({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) => {
+  const { locale } = await params;
   const session = await auth();
 
   return (
     <SessionProvider session={session}>
       <div className="max-w-md mx-auto space-y-4">
-        <h2 className="h2-bold">Profile</h2>
+        <h2 className="h2-bold">
+          {locale === "en" ? "Profile" : "الملف الشخصي"}
+        </h2>
         <ProfileForm locale={locale}></ProfileForm>
       </div>
     </SessionProvider>
