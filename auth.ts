@@ -102,16 +102,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
       }
 
-      // 2. THE MISSING PART: Update the token when the name changes
-      if (trigger === "update" && session?.name) {
-        token.name = session.name;
+      // Update the token when the name changes
+      if (trigger === "update" && session?.user?.name) {
+        token.name = session.user.name;
       }
 
       return token;
     },
-    async session({ session, token }) {
-      // 3. Keep the UI in sync with the token
+    async session({ session, token}) {
+      // Keep the UI in sync with the token
       //console.log(token);
+
       if (token) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;

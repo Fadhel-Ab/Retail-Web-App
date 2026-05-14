@@ -18,10 +18,13 @@ import { Loader } from "lucide-react";
 import { start } from "repl";
 import { updateProfile } from "@/lib/actions/users.actions";
 
+import { useRouter } from "next/navigation";
+
 const ProfileForm = ({ locale }: { locale: string }) => {
   const updateUser = createUpdateProfileSchema(locale);
   const { data, update } = useSession();
   const [isPending, startTransition] = useTransition();
+  const router=useRouter();
 
   const form = useForm<z.infer<typeof updateUser>>({
     resolver: zodResolver(updateUser),
@@ -41,6 +44,12 @@ const ProfileForm = ({ locale }: { locale: string }) => {
         return;
       }
       toast.success(res.message);
+      await update({
+        user: {
+          name: values.name,
+        },
+      });
+       router.refresh();
     });
   };
 
