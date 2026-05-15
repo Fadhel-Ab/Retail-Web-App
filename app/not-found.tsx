@@ -1,10 +1,10 @@
-"use client";
 import { APP_NAME } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { locale } from "react-intlayer/server";
+import { getLocale } from "next-intlayer/server";
 
-const NotFoundPage = () => {
+const NotFoundPage = async () => {
+  const locale = await getLocale();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Image
